@@ -1,0 +1,394 @@
+/* ============================================================================
+   Hero — אבחון דיגיטלי. סגנון: מינימלי, שקט, יוקרתי.
+   הרקע לעולם לא מתחרה בתוכן.
+   ============================================================================ */
+
+.dtx {
+  --tech-400: #9fdcff;
+  --tech-500: #6cc8ff;
+  --tech-600: #2f8fc7;
+
+  position: relative;
+  min-height: 100svh;
+  background: #050505;
+  color: #fff;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+}
+
+/* --- רקע: כמעט שחור, אור וולומטרי מאופק מאוד --- */
+.dtx-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.dtx-volume {
+  position: absolute;
+  inset: 0;
+  background:
+    /* אור מרכזי רך שמרים את כל הסצנה */
+    radial-gradient(52% 44% at 50% 40%, rgba(88, 168, 224, 0.20), transparent 72%),
+    /* נגיעת מותג בפינה העליונה */
+    radial-gradient(46% 40% at 84% 6%, rgba(165, 29, 70, 0.24), transparent 68%),
+    /* אור קר מנוגד בפינה הנגדית */
+    radial-gradient(44% 38% at 10% 22%, rgba(108, 200, 255, 0.13), transparent 70%),
+    /* זוהר תחתון שמחבר לסקשן הבא */
+    radial-gradient(90% 52% at 50% 116%, rgba(36, 86, 124, 0.20), transparent 74%);
+}
+/* וינייטה מרוככת — היה 0.72 וזה עשה את ההירו כהה מדי */
+.dtx-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(78% 70% at 50% 46%, transparent 42%, rgba(5, 5, 5, 0.5) 100%);
+}
+
+/* --- קרני אור רכות --- */
+.dtx-lights { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.dtx-lights::before {
+  content: "";
+  position: absolute;
+  inset-inline: -10%;
+  inset-block-start: -28%;
+  height: 82%;
+  background: radial-gradient(50% 62% at 50% 0%, rgba(150, 205, 255, 0.16), transparent 70%);
+}
+.dtx-ray {
+  position: absolute;
+  inset-block-start: -45%;
+  inset-inline-start: 50%;
+  width: 34vmax;
+  height: 155%;
+  transform-origin: top center;
+  filter: blur(30px);
+  opacity: 0.55;
+  will-change: transform;
+}
+.dtx-ray--a {
+  background: linear-gradient(to bottom, rgba(150, 205, 255, 0.16), transparent 60%);
+  transform: translateX(50%) rotate(15deg);
+  animation: ray-sway-a 17s ease-in-out infinite alternate;
+}
+.dtx-ray--b {
+  background: linear-gradient(to bottom, rgba(216, 87, 127, 0.14), transparent 58%);
+  transform: translateX(50%) rotate(-19deg);
+  animation: ray-sway-b 21s ease-in-out infinite alternate;
+}
+@keyframes ray-sway-a {
+  from { transform: translateX(50%) rotate(12deg); }
+  to   { transform: translateX(50%) rotate(20deg); }
+}
+@keyframes ray-sway-b {
+  from { transform: translateX(50%) rotate(-22deg); }
+  to   { transform: translateX(50%) rotate(-14deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dtx-ray { animation: none; }
+}
+
+.dtx-canvas { position: absolute; inset: 0; z-index: 1; }
+.dtx-orb-fallback {
+  position: absolute; inset: 0; margin: auto;
+  width: min(40vmin, 340px); height: min(40vmin, 340px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 45%, rgba(108, 200, 255, 0.22), transparent 68%);
+  filter: blur(6px);
+}
+
+/* ============================================================================
+   שכבת התוכן
+   ============================================================================ */
+
+/* יחסי (לא absolute) כדי שההירו יגדל אם התוכן גבוה מהמסך */
+.dtx-overlay {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: 6rem 5rem;
+  pointer-events: none;
+  text-align: center;
+}
+.dtx-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.9rem, 2vh, 1.5rem);
+  position: relative;
+}
+/* סקרים עדין — רק כדי לשמור קריאוּת, בלי לחנוק את החלקיקים */
+.dtx-content::before {
+  content: "";
+  position: absolute;
+  inset: -8% -12%;
+  z-index: -1;
+  background: radial-gradient(52% 52% at 50% 50%, rgba(4, 8, 12, 0.62), rgba(4, 8, 12, 0.22) 64%, transparent 84%);
+  pointer-events: none;
+}
+.dtx-overlay button,
+.dtx-overlay a,
+.dtx-overlay input,
+.dtx-overlay form { pointer-events: auto; }
+
+/* ============================================================================
+   ציר הזמן של הכניסה — CSS בלבד (עמיד: לא תלוי ב-JS כדי שהתוכן ייראה)
+   easeOutExpo · 800ms · 10px כלפי מעלה
+   ============================================================================ */
+@keyframes dtx-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.dtx-rise {
+  animation: dtx-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--d, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dtx-rise { animation: none; opacity: 1; transform: none; }
+}
+
+/* ---------- אמבלם "העסק שלך" ---------- */
+.cloud-emblem {
+  position: relative;
+  width: clamp(84px, 9vw, 116px);
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+  animation: cloud-float 9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+@keyframes cloud-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.cloud-emblem::before {
+  content: "";
+  position: absolute;
+  inset: -75%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(108, 200, 255, 0.22), transparent 64%);
+  filter: blur(14px);
+  z-index: -1;
+  pointer-events: none;
+}
+.cloud-emblem__svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 16px rgba(108, 200, 255, 0.28));
+}
+.cloud-emblem__label {
+  position: absolute;
+  inset-block-start: 56%;
+  inset-inline-start: 50%;
+  transform: translate(50%, -50%);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.62rem, 1vw, 0.76rem);
+  letter-spacing: -0.005em;
+  color: rgba(240, 250, 255, 0.95);
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cloud-emblem { animation: none; }
+}
+
+/* ---------- כותרת ראשית ---------- */
+.dtx-headline { max-width: min(72rem, 94vw); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.dtx-h1 { margin: 0; font-family: var(--font-display); line-height: 1.14; }
+.dtx-h1__l1 {
+  display: block;
+  font-weight: 500;
+  font-size: clamp(0.95rem, 1.9vw, 1.25rem);
+  color: rgba(207, 238, 255, 0.72);
+  letter-spacing: 0.01em;
+  margin-block-end: 0.55rem;
+}
+.dtx-h1__l2 {
+  display: block;
+  font-weight: 700;
+  font-size: min(3.2rem, 4.3vw);
+  letter-spacing: -0.028em;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8);
+  white-space: nowrap; /* דסקטופ: הכל בשורה אחת */
+}
+.dtx-h1__a, .dtx-h1__b { display: inline; }
+
+/* מובייל: שתי שורות מפורשות */
+@media (max-width: 700px) {
+  .dtx-h1__l2 { white-space: normal; font-size: clamp(1.85rem, 8.2vw, 2.6rem); }
+  .dtx-h1__a, .dtx-h1__b { display: block; }
+}
+
+.dtx-sub {
+  margin: 0 auto; max-width: 34rem;
+  color: rgba(232, 244, 251, 0.82); font-weight: 400;
+  font-size: clamp(1rem, 1.7vw, 1.2rem); line-height: 1.55;
+}
+
+/* --- מצב מכווץ: הכותרת הופכת לתג זכוכית בצבעי ההירו --- */
+.dtx-headline--compact .dtx-h1__l1 { display: none; }
+.dtx-headline--compact .dtx-h1__l2 {
+  display: inline-block;
+  white-space: normal;
+  font-size: clamp(0.86rem, 1.55vw, 1.02rem);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1.35;
+  color: rgba(226, 244, 255, 0.92);
+  text-shadow: none;
+  padding: 0.52rem 1.15rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    rgba(108, 200, 255, 0.14),
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(165, 29, 70, 0.12)
+  );
+  border: 1px solid rgba(159, 220, 255, 0.28);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 10px 30px -18px rgba(0, 0, 0, 0.9),
+    0 0 22px -8px rgba(108, 200, 255, 0.35);
+}
+.dtx-headline--compact .dtx-h1__a,
+.dtx-headline--compact .dtx-h1__b { display: inline; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .dtx-headline--compact .dtx-h1__l2 { background: rgba(10, 26, 40, 0.85); }
+}
+.dtx-headline--compact + .dtx-sub { display: none; }
+
+/* ---------- שלבים ---------- */
+.dtx-step { width: 100%; max-width: 44rem; display: flex; justify-content: center; margin-block-start: clamp(0.5rem, 2vh, 1.25rem); }
+.dtx-step__inner { width: 100%; }
+.dtx-stepblock.is-locked { pointer-events: none; }
+.dtx-step__head { display: flex; align-items: center; justify-content: center; gap: 0.65rem; }
+.dtx-step__n {
+  font-family: var(--font-display); font-weight: 700; font-size: 0.75rem;
+  color: rgba(159, 220, 255, 0.9); padding: 0.18rem 0.5rem; border-radius: 7px;
+  border: 1px solid rgba(108, 200, 255, 0.25); background: rgba(108, 200, 255, 0.07);
+}
+.dtx-step__title {
+  margin: 0; font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(1.2rem, 2.6vw, 1.6rem); color: #fff; letter-spacing: -0.015em;
+}
+.dtx-step__lead {
+  margin: 0.55rem auto 1.5rem; max-width: 30rem;
+  color: rgba(223, 240, 251, 0.6); font-size: 0.95rem;
+}
+
+.dtx-cards { display: grid; grid-template-columns: 1fr; gap: 0.7rem; }
+@media (min-width: 620px) { .dtx-cards { grid-template-columns: repeat(2, 1fr); } }
+
+.dtx-card {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  text-align: start;
+  padding: 1.05rem 1.25rem;
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font-body); font-weight: 500; font-size: 1.01rem;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  transition: border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.45s, color 0.35s;
+}
+.dtx-card__arrow { color: rgba(159, 220, 255, 0.75); flex: none; transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s; }
+@media (hover: hover) {
+  .dtx-card:hover {
+    border-color: rgba(108, 200, 255, 0.42);
+    background: rgba(108, 200, 255, 0.07);
+    color: #fff;
+  }
+  .dtx-card:hover .dtx-card__arrow { transform: translateX(-3px); color: #fff; }
+}
+/* מצב פעיל אלגנטי */
+.dtx-card.is-selected {
+  border-color: rgba(159, 220, 255, 0.85);
+  background: rgba(108, 200, 255, 0.12);
+  color: #fff;
+  box-shadow: 0 0 0 1px rgba(159, 220, 255, 0.3), 0 12px 40px -18px rgba(108, 200, 255, 0.5);
+}
+.dtx-card.is-dimmed { border-color: rgba(255, 255, 255, 0.05); }
+
+/* ---------- שאלת הקישור ---------- */
+.dtx-linkrow { display: grid; gap: 0.9rem; max-width: 30rem; margin-inline: auto; }
+.dtx-linkinput { text-align: start; }
+.dtx-linkbtns { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+.dtx-skip {
+  background: none; border: 0; cursor: pointer;
+  color: rgba(223, 240, 251, 0.55); font-weight: 500; font-size: 0.9rem;
+  text-decoration: underline; text-underline-offset: 4px;
+  transition: color 0.3s;
+}
+.dtx-skip:hover { color: #fff; }
+
+/* ---------- טופס ---------- */
+.dtx-form-wrap { width: 100%; max-width: 33rem; margin-inline: auto; }
+.dtx-form {
+  border-radius: 22px; padding: clamp(1.6rem, 4vw, 2.3rem); text-align: center;
+  background: rgba(6, 12, 20, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(22px) saturate(130%);
+  -webkit-backdrop-filter: blur(22px) saturate(130%);
+  box-shadow: 0 30px 80px -50px rgba(0, 0, 0, 1);
+}
+.dtx-form .eyebrow { color: rgba(159, 220, 255, 0.9); }
+.dtx-form__title {
+  margin: 0.5rem 0 0; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.45rem, 3.4vw, 1.95rem); color: #fff; letter-spacing: -0.02em;
+}
+.dtx-insight {
+  margin: 1.3rem 0; padding: 1rem 1.1rem; border-radius: 14px; text-align: start;
+  background: rgba(108, 200, 255, 0.06);
+  border: 1px solid rgba(108, 200, 255, 0.18);
+  border-inline-start: 2px solid rgba(159, 220, 255, 0.85);
+}
+.dtx-insight__label {
+  display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+  color: rgba(159, 220, 255, 0.9); margin-block-end: 0.4rem;
+}
+.dtx-insight__text { margin: 0; color: rgba(234, 246, 253, 0.95); font-size: 0.99rem; line-height: 1.55; }
+.dtx-insight__goal { margin: 0.55rem 0 0; color: rgba(159, 220, 255, 0.95); font-weight: 600; font-size: 0.94rem; }
+.dtx-insight__urgency { margin: 0.35rem 0 0; color: rgba(223, 240, 251, 0.6); font-size: 0.9rem; }
+.dtx-form__sub { margin: 0 auto 1.4rem; max-width: 27rem; color: rgba(223, 240, 251, 0.72); font-size: 0.96rem; }
+.dtx-form__grid { display: grid; gap: 1rem; text-align: start; }
+.dtx-form__submit { width: 100%; padding: 16px; margin-top: 0.25rem; font-size: 1rem; }
+.dtx-form__reassure { margin: 1rem 0 0; font-size: 0.83rem; color: rgba(223, 240, 251, 0.5); }
+
+/* ---------- רמז גלילה ---------- */
+.dtx-scroll {
+  margin-block-start: clamp(1.5rem, 4vh, 2.75rem);
+  display: inline-flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  color: rgba(223, 240, 251, 0.4); font-size: 0.76rem; font-weight: 500; letter-spacing: 0.08em;
+  pointer-events: auto;
+}
+.dtx-scroll__mouse {
+  width: 1.3rem; height: 2.1rem; border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 999px;
+  display: flex; justify-content: center; padding-block-start: 0.35rem;
+}
+.dtx-scroll__mouse > span {
+  width: 0.24rem; height: 0.24rem; border-radius: 50%; background: rgba(159, 220, 255, 0.9);
+  animation: hint-bounce 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@media (max-width: 520px) {
+  .dtx-overlay { padding-block: 5.5rem 4.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dtx-scroll__mouse > span { animation: none !important; }
+}
+
+@keyframes hint-bounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(0.6rem); opacity: 0.25; }
+}

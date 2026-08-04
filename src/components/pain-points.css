@@ -1,0 +1,146 @@
+/* ============================================================================
+   PainPoints — כרטיסים שנכנסים לסירוגין מהצדדים, כל אחד בגוון אחר
+   ============================================================================ */
+
+.pain-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-block-start: clamp(2.25rem, 5vw, 3.25rem);
+}
+@media (min-width: 760px) {
+  .pain-grid { grid-template-columns: repeat(2, 1fr); gap: 1.15rem; }
+}
+
+.pain-card {
+  --tint: var(--accent-400);
+  --tint-soft: rgba(216, 87, 127, 0.14);
+  --tint-line: rgba(216, 87, 127, 0.38);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: start;
+  cursor: pointer;
+  padding: clamp(1.15rem, 2.6vw, 1.6rem) clamp(1.25rem, 3vw, 1.75rem);
+  border-radius: 18px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.02rem, 1.9vw, 1.22rem);
+  line-height: 1.35;
+  color: #fff;
+  background:
+    linear-gradient(135deg, var(--tint-soft), rgba(255, 255, 255, 0.03) 62%),
+    rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--tint-line);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 40px -26px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.45s,
+    box-shadow 0.45s,
+    background 0.45s;
+}
+
+/* גוונים — כל כרטיס מעט אחר */
+.pain-card--rose   { --tint: #d8577f; --tint-soft: rgba(216, 87, 127, 0.16); --tint-line: rgba(216, 87, 127, 0.42); }
+.pain-card--azure  { --tint: #6cc8ff; --tint-soft: rgba(108, 200, 255, 0.14); --tint-line: rgba(108, 200, 255, 0.40); }
+.pain-card--violet { --tint: #a99bff; --tint-soft: rgba(169, 155, 255, 0.14); --tint-line: rgba(169, 155, 255, 0.40); }
+.pain-card--teal   { --tint: #67d9c4; --tint-soft: rgba(103, 217, 196, 0.13); --tint-line: rgba(103, 217, 196, 0.38); }
+
+/* פס צבע דק בקצה הפנימי */
+.pain-card::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--tint), transparent);
+  opacity: 0.85;
+}
+
+.pain-card__label { position: relative; z-index: 1; }
+.pain-card__go {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 50%;
+  color: var(--tint);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--tint-line);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), background 0.45s;
+}
+
+@media (hover: hover) {
+  .pain-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--tint);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 26px 56px -28px rgba(0, 0, 0, 0.95),
+      0 0 28px -12px var(--tint);
+  }
+  .pain-card:hover .pain-card__go {
+    transform: translateX(-4px);
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+.pain-card:active { transform: translateY(-1px) scale(0.995); }
+
+/* --- כניסה לסירוגין מהצדדים (משתלט על ברירת המחדל של [data-reveal]) --- */
+.pain-card[data-reveal] {
+  opacity: 0;
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.45s,
+    box-shadow 0.45s;
+  transition-delay: var(--reveal-delay, 0s);
+}
+.pain-card--from-start[data-reveal] { transform: translateX(46px); }
+.pain-card--from-end[data-reveal]   { transform: translateX(-46px); }
+.pain-card[data-reveal].is-visible  { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pain-card[data-reveal],
+  .pain-card--from-start[data-reveal],
+  .pain-card--from-end[data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+/* ============================================================================
+   הערה בטופס — מה שהמבקר לחץ עליו
+   ============================================================================ */
+
+.pain-note {
+  margin-block-end: 1.35rem;
+  padding: 1rem 1.15rem;
+  border-radius: 14px;
+  text-align: start;
+  background: rgba(108, 200, 255, 0.07);
+  border: 1px solid rgba(108, 200, 255, 0.22);
+  border-inline-start: 3px solid var(--accent-400);
+  animation: pain-note-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes pain-note-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.pain-note__label {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent-400);
+  margin-block-end: 0.4rem;
+}
+.pain-note__q { margin: 0 0 0.5rem; font-weight: 700; color: #fff; }
+.pain-note__a { margin: 0; color: var(--mist-200); line-height: 1.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pain-note { animation: none; }
+}

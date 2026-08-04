@@ -1,0 +1,865 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   AS digital — Design System
+   Theme: Dark premium, בורדו כהה (accent) + כחול בהיר (ambient/זיקוקים) + לבן
+   ============================================================================ */
+
+:root {
+  /* --- משטחים כהים: שחור-יין עמוק עם גוון בורדו (שלושה עומקים לריתמוס) --- */
+  --ink-950: #120409;   /* המשטח הכהה הראשי */
+  --ink-900: #1b0710;
+  --ink-850: #240a16;
+  --ink-800: #2f0e1d;
+
+  /* --- accent = בורדו כהה. שלושה stops באותו יחס בהירות --- */
+  --accent-400: #d8577f;  /* הבהיר — זוהר / אייקונים על כהה */
+  --accent-500: #a51d46;  /* הראשי — כפתורים / קווים / סטטיסטיקה */
+  --accent-600: #86153a;
+  --accent-700: #5e0f29;  /* העמוק — eyebrows על בהיר */
+
+  /* --- כחול בהיר: צבע אווירה + זיקוקים (משני, לא CTA) --- */
+  --azure-300: #a9dbff;
+  --azure-400: #6cbdf5;
+  --azure-500: #3d97e0;
+
+  /* --- ניטרליים --- */
+  --white: #ffffff;
+  --mist-200: #e9dfe4;   /* טקסט משני על כהה */
+  --mist-400: #b79aa6;   /* טקסט שלישוני / caption */
+  --ice-050: #fbf7f9;    /* משטח בהיר רך */
+  --ink-fg: #14060b;     /* טקסט על בהיר */
+
+  --bg: var(--ink-950);
+  --fg: var(--white);
+
+  --ease-brand: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --container: 1200px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+}
+
+@theme inline {
+  --color-ink-950: var(--ink-950);
+  --color-ink-900: var(--ink-900);
+  --color-ink-850: var(--ink-850);
+  --color-ink-800: var(--ink-800);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+  --color-azure-300: var(--azure-300);
+  --color-azure-400: var(--azure-400);
+  --color-azure-500: var(--azure-500);
+  --color-white: var(--white);
+  --color-mist-200: var(--mist-200);
+  --color-mist-400: var(--mist-400);
+  --color-ice-050: var(--ice-050);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --ease-brand: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ============================================================================
+   בסיס
+   ============================================================================ */
+
+* { min-width: 0; }
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+@media (min-width: 768px) {
+  body { font-size: 1.125rem; }
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent-500) 42%, transparent);
+  color: #fff;
+}
+
+a { color: inherit; text-decoration: none; }
+img, svg, video, canvas { display: block; max-width: 100%; }
+button { font: inherit; }
+
+/* מספרים / טלפון / מייל — תמיד LTR */
+.ltr { direction: ltr; unicode-bidi: isolate; }
+
+/* ============================================================================
+   טיפוגרפיה
+   ============================================================================ */
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-400);
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-size: clamp(2.5rem, 6.4vw, 4.75rem);
+  margin: 0;
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.13;
+  letter-spacing: -0.015em;
+  font-size: clamp(1.9rem, 4vw, 2.85rem);
+  margin: 0;
+}
+
+.h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.25;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  margin: 0;
+}
+
+.lead {
+  font-size: clamp(1.0625rem, 1.6vw, 1.3rem);
+  line-height: 1.65;
+  color: var(--mist-200);
+}
+
+.caption { font-size: 0.875rem; line-height: 1.5; color: var(--mist-400); }
+
+.text-gradient {
+  background: linear-gradient(120deg, var(--accent-400) 0%, var(--azure-400) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================================================
+   פריסה ומרווחים
+   ============================================================================ */
+
+.container-x {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* רווח מודולים מצומצם — פלואו מהיר יותר בין הסקשנים */
+.section { padding-block: clamp(2.75rem, 5.5vw, 4.75rem); position: relative; }
+
+.surface-950 { background: var(--ink-950); color: var(--white); }
+.surface-900 { background: var(--ink-900); color: var(--white); }
+.surface-ice { background: var(--ice-050); color: var(--ink-fg); }
+
+.section-head { max-width: 46rem; }
+.section-head--center { margin-inline: auto; text-align: center; }
+
+/* קו accent מתחת לכותרת */
+.heading-accent { position: relative; display: inline-block; padding-block-end: 0.85rem; }
+.heading-accent::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-end: 0;
+  width: 3.5rem;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(to left, var(--accent-500), color-mix(in srgb, var(--accent-500) 0%, transparent));
+}
+.heading-accent--center::after { inset-inline-start: 50%; transform: translateX(50%); }
+
+/* ============================================================================
+   זכוכית נוזלית
+   ============================================================================ */
+
+.glass {
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 10px 40px rgba(10, 2, 6, 0.5);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: var(--ink-800); }
+}
+
+/* ============================================================================
+   כפתורים — Liquid Glass
+   ============================================================================ */
+
+.glass-btn {
+  --_bg: rgba(255, 255, 255, 0.08);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: 999px;
+  padding: 15px 30px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1;
+  color: #fff;
+  cursor: pointer;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: var(--_bg);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 8px 30px rgba(10, 2, 6, 0.4);
+  transition: transform 0.35s var(--ease-brand), box-shadow 0.35s, background 0.35s, border-color 0.35s;
+}
+
+.glass-btn--primary {
+  --_bg: linear-gradient(135deg, rgba(191, 33, 78, 0.98), rgba(120, 18, 48, 0.95));
+  border-color: rgba(216, 87, 127, 0.9);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 0 0 1px rgba(216, 87, 127, 0.35),
+    0 10px 34px rgba(120, 18, 48, 0.55);
+}
+
+.glass-btn__icon { width: 1.15em; height: 1.15em; flex: none; }
+
+.glass-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s var(--ease-brand);
+}
+
+@media (hover: hover) {
+  .glass-btn:hover { transform: translateY(-2px) scale(1.02); border-color: rgba(255, 255, 255, 0.4); }
+  .glass-btn--primary:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,0.32), 0 0 0 1px rgba(216,87,127,0.55), 0 16px 44px rgba(120,18,48,0.7); }
+  .glass-btn:hover::after { transform: translateX(120%); }
+}
+.glass-btn:active { transform: scale(0.97); }
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-btn { background: var(--ink-800); }
+  .glass-btn--primary { background: var(--accent-600); }
+}
+
+/* וריאנט על משטח בהיר */
+.on-light .glass-btn:not(.glass-btn--primary) {
+  --_bg: rgba(20, 6, 11, 0.05);
+  border-color: rgba(20, 6, 11, 0.16);
+  color: var(--ink-fg);
+}
+
+/* כפתור WhatsApp ירוק (header + inline) */
+.wa-btn {
+  --_bg: linear-gradient(135deg, #29d366, #1eae54);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.wa-btn.glass-btn { color: #fff; }
+
+/* ============================================================================
+   כרטיסים פרמיום
+   ============================================================================ */
+
+.card {
+  position: relative;
+  border-radius: 20px;
+  padding: clamp(1.5rem, 3vw, 2.1rem);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 14px 36px -22px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.5s var(--ease-brand), border-color 0.5s, box-shadow 0.5s;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-500), transparent);
+  transform: scaleX(0.25);
+  opacity: 0.6;
+  transition: transform 0.5s var(--ease-brand), opacity 0.5s;
+}
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(216, 87, 127, 0.4);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 34px 60px -28px rgba(0, 0, 0, 0.9), 0 12px 40px -16px rgba(165, 29, 70, 0.3);
+  }
+  .card:hover::before { transform: scaleX(1); opacity: 1; }
+}
+
+/* card על משטח בהיר */
+.on-light .card {
+  background: #fff;
+  border-color: rgba(20, 6, 11, 0.08);
+  box-shadow: 0 18px 40px -24px rgba(94, 15, 41, 0.25);
+  color: var(--ink-fg);
+}
+
+/* אייקון עגול בראש כרטיס */
+.card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(165, 29, 70, 0.26), rgba(61, 151, 224, 0.16));
+  border: 1px solid rgba(216, 87, 127, 0.36);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 26px -16px rgba(165, 29, 70, 0.7);
+  color: var(--accent-400);
+  margin-block-end: 1.35rem;
+}
+.card-icon svg { width: 2.35rem; height: 2.35rem; }
+@media (min-width: 768px) {
+  .card-icon { width: 4.75rem; height: 4.75rem; }
+  .card-icon svg { width: 2.6rem; height: 2.6rem; }
+}
+
+.tagline-accent { color: var(--accent-400); font-weight: 700; }
+
+/* ============================================================================
+   סטטיסטיקה
+   ============================================================================ */
+
+.stat-value {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(120deg, var(--accent-400), var(--azure-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================================================
+   רקעים אמביינט
+   ============================================================================ */
+
+.ambient-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(216, 87, 127, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(108, 189, 245, 0.06) 1px, transparent 1px);
+  background-size: 58px 58px;
+  mask-image: radial-gradient(120% 90% at 50% 40%, black, transparent 72%);
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 40%, black, transparent 72%);
+}
+
+.ambient-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 82% 8%, rgba(165, 29, 70, 0.28), transparent 60%),
+    radial-gradient(55% 45% at 10% 20%, rgba(61, 151, 224, 0.16), transparent 62%),
+    radial-gradient(70% 60% at 50% 100%, rgba(120, 18, 48, 0.3), transparent 70%);
+}
+
+.seam {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(90deg, transparent, rgba(216, 87, 127, 0.5), transparent);
+}
+
+/* ============================================================================
+   Reveal בגלילה (CSS בלבד — נשלט ע"י IntersectionObserver ב-JS קטן)
+   ============================================================================ */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease-brand), transform 0.7s var(--ease-brand);
+  transition-delay: var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+[data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* above-the-fold: אנימציית CSS מיידית (לא ממתינה ל-JS) — שומר LCP */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: none; }
+}
+.rise { opacity: 0; animation: rise-in 0.8s var(--ease-brand) forwards; }
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.18s; }
+.rise-3 { animation-delay: 0.32s; }
+.rise-4 { animation-delay: 0.46s; }
+.rise-5 { animation-delay: 0.6s; }
+
+/* ============================================================================
+   Header
+   ============================================================================ */
+
+.site-header {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 50;
+  transition: background 0.4s var(--ease-brand), box-shadow 0.4s, backdrop-filter 0.4s, border-color 0.4s;
+  border-block-end: 1px solid transparent;
+}
+.site-header--scrolled {
+  background: rgba(18, 4, 9, 0.72);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border-block-end-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.brand-mark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 1.35rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1em;
+  direction: ltr; /* מכריח סדר לטיני נכון: AS Digital ולא Digital AS */
+  unicode-bidi: isolate;
+}
+.brand-mark .dot { color: var(--accent-400); }
+
+.nav-link {
+  position: relative;
+  font-weight: 600;
+  font-size: 0.975rem;
+  color: var(--mist-200);
+  padding-block: 0.4rem;
+  transition: color 0.3s;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -2px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-600), var(--accent-400), var(--azure-400));
+  transform: scaleX(0);
+  transition: transform 0.3s var(--ease-brand);
+}
+.nav-link:hover { color: #fff; }
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* תפריט מובייל */
+.mobile-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(18, 4, 9, 0.92);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+
+/* ============================================================================
+   WhatsApp FAB דינמי (הכפתור השני)
+   ============================================================================ */
+
+.wa-fab {
+  position: fixed;
+  inset-inline-end: clamp(1rem, 4vw, 1.75rem);
+  inset-block-end: clamp(1rem, 4vw, 1.75rem);
+  z-index: 55;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.15rem 0.85rem 1.35rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #29d366, #17a74a);
+  color: #fff;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 12px 34px rgba(23, 167, 74, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(140%);
+  opacity: 0;
+  transition: transform 0.5s var(--ease-brand), opacity 0.5s, box-shadow 0.35s;
+}
+.wa-fab--visible { transform: translateY(0); opacity: 1; }
+.wa-fab svg { width: 1.55rem; height: 1.55rem; flex: none; }
+.wa-fab .wa-fab__label { white-space: nowrap; }
+@media (hover: hover) {
+  .wa-fab:hover { box-shadow: 0 16px 44px rgba(23, 167, 74, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+}
+.wa-fab::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  border: 2px solid rgba(41, 211, 102, 0.55);
+  animation: wa-pulse 2.4s var(--ease-brand) infinite;
+  pointer-events: none;
+}
+@keyframes wa-pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  70% { transform: scale(1.28); opacity: 0; }
+  100% { transform: scale(1.28); opacity: 0; }
+}
+@media (max-width: 520px) {
+  .wa-fab__label { display: none; }
+  .wa-fab { padding: 0.9rem; }
+}
+
+/* ============================================================================
+   טופס
+   ============================================================================ */
+
+.field-label { display: block; font-weight: 600; font-size: 0.95rem; margin-block-end: 0.5rem; color: var(--mist-200); }
+.field {
+  width: 100%;
+  border-radius: 14px;
+  padding: 0.85rem 1.1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font: inherit;
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+.field::placeholder { color: var(--mist-400); }
+.field:focus {
+  outline: none;
+  border-color: var(--accent-400);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(165, 29, 70, 0.25);
+}
+textarea.field { resize: vertical; min-height: 7rem; }
+
+/* ============================================================================
+   Footer
+   ============================================================================ */
+
+.footer-link { color: var(--mist-200); transition: color 0.25s; }
+.footer-link:hover { color: var(--accent-400); }
+
+/* ============================================================================
+   נגישות
+   ============================================================================ */
+
+:where(a, button, input, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--azure-300);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.skip-link {
+  position: fixed;
+  inset-block-start: -100%;
+  inset-inline-start: 1rem;
+  z-index: 100;
+  background: var(--accent-500);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0 0 12px 12px;
+  font-weight: 700;
+  transition: inset-block-start 0.3s var(--ease-brand);
+}
+.skip-link:focus { inset-block-start: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .rise { opacity: 1 !important; animation: none !important; }
+}
+
+/* ============================================================================
+   STATS
+   ============================================================================ */
+
+.stats-band { padding-block: clamp(1.75rem, 3.5vw, 2.75rem); border-block: 1px solid rgba(255, 255, 255, 0.06); }
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem 1rem;
+  text-align: center;
+}
+.stat-label { margin-block-start: 0.4rem; }
+@media (min-width: 720px) {
+  .stats-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ============================================================================
+   GRIDS משותפים
+   ============================================================================ */
+
+.services-grid,
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-block-start: clamp(2.5rem, 5vw, 3.5rem);
+}
+@media (min-width: 620px) { .services-grid, .results-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 960px) { .services-grid { grid-template-columns: repeat(3, 1fr); } .results-grid { grid-template-columns: repeat(3, 1fr); } }
+
+/* ============================================================================
+   PROCESS
+   ============================================================================ */
+
+.process-grid {
+  list-style: none;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  counter-reset: step;
+}
+@media (min-width: 620px) { .process-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .process-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.process-step {
+  position: relative;
+  padding: 1.75rem 1.5rem 1.5rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.process-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2.5rem;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--accent-400), var(--azure-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: block;
+  margin-block-end: 0.75rem;
+}
+
+/* ============================================================================
+   CASE CARD (print3d)
+   ============================================================================ */
+
+.case-card {
+  margin-block-start: clamp(2rem, 4vw, 3rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+  border-radius: 26px;
+  padding: clamp(1.75rem, 4vw, 3rem);
+  background: linear-gradient(135deg, rgba(165, 29, 70, 0.16), rgba(61, 151, 224, 0.08));
+  border: 1px solid rgba(216, 87, 127, 0.25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 30px 70px -40px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+}
+.case-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.75rem, 3.5vw, 2.4rem); margin: 0.25rem 0 0; }
+.case-bullets { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: 0.6rem; }
+.case-bullets li { display: flex; align-items: center; gap: 0.65rem; color: var(--mist-200); }
+.case-check {
+  width: 1.1rem; height: 1.1rem; border-radius: 50%; flex: none;
+  background: radial-gradient(circle at 50% 40%, var(--accent-400), var(--accent-600));
+  position: relative;
+}
+.case-check::after {
+  content: ""; position: absolute; inset: 0; margin: auto;
+  width: 0.32rem; height: 0.55rem; border: 2px solid #fff; border-top: 0; border-inline-start: 0;
+  transform: translateY(-1px) rotate(45deg);
+}
+.case-visual { display: flex; justify-content: center; }
+.case-browser {
+  width: 100%;
+  max-width: 26rem;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #0c0308;
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+.case-browser__bar { display: flex; align-items: center; gap: 0.4rem; padding: 0.7rem 0.9rem; background: rgba(255, 255, 255, 0.05); }
+.case-browser__bar > span { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: rgba(255, 255, 255, 0.25); }
+.case-browser__bar > span:first-child { background: var(--accent-400); }
+.case-browser__url {
+  margin-inline-start: auto; font-size: 0.75rem; color: var(--mist-400);
+  background: rgba(0, 0, 0, 0.35); padding: 0.2rem 0.7rem; border-radius: 999px;
+}
+.case-browser__screen {
+  position: relative;
+  aspect-ratio: 1914 / 1080; /* יחס המקור המדויק — בלי חיתוך */
+  overflow: hidden;
+  background: #0b1016;
+}
+.case-shot {
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.7s var(--ease-brand);
+}
+@media (hover: hover) {
+  .case-browser:hover .case-shot { transform: scale(1.035); }
+  .case-browser:hover {
+    border-color: rgba(216, 87, 127, 0.45);
+    box-shadow: 0 30px 70px -28px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(216, 87, 127, 0.25);
+  }
+}
+.case-browser {
+  display: block;
+  transition: border-color 0.5s var(--ease-brand), box-shadow 0.5s var(--ease-brand);
+}
+
+@media (min-width: 900px) {
+  .case-card { grid-template-columns: 1.1fr 0.9fr; }
+}
+
+/* ============================================================================
+   ABOUT
+   ============================================================================ */
+
+.about-grid { display: grid; grid-template-columns: 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+.about-portrait {
+  position: relative;
+  width: min(20rem, 70vw);
+  aspect-ratio: 1;
+  margin-inline: auto;
+  border-radius: 28px;
+  background: linear-gradient(160deg, var(--ink-800), var(--ink-950));
+  border: 1px solid rgba(216, 87, 127, 0.3);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+.about-portrait__mono {
+  font-family: var(--font-display); font-weight: 800; font-size: 6rem; letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--accent-400), var(--azure-400));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  z-index: 2;
+}
+.about-portrait__ring {
+  position: absolute; inset: 12%; border-radius: 50%;
+  border: 1px dashed rgba(216, 87, 127, 0.4);
+  z-index: 1;
+}
+.about-portrait__glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(60% 60% at 50% 100%, rgba(165, 29, 70, 0.35), transparent 65%),
+              radial-gradient(50% 50% at 20% 10%, rgba(61, 151, 224, 0.25), transparent 60%);
+}
+.about-signature { margin-block-start: 1.75rem; font-family: var(--font-display); font-weight: 700; color: var(--accent-400); }
+@media (min-width: 900px) {
+  .about-grid { grid-template-columns: 0.85fr 1.15fr; }
+}
+
+/* ============================================================================
+   WHY
+   ============================================================================ */
+
+.why-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-block-start: clamp(2.5rem, 5vw, 3.5rem);
+}
+@media (min-width: 620px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .why-grid { grid-template-columns: repeat(4, 1fr); } }
+.why-item {
+  padding: 1.75rem 1.5rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.4s, transform 0.4s var(--ease-brand);
+}
+@media (hover: hover) { .why-item:hover { border-color: rgba(216, 87, 127, 0.4); transform: translateY(-4px); } }
+.why-arrow {
+  color: var(--accent-400);
+  margin-block-end: 1rem;
+  filter: drop-shadow(0 0 8px rgba(216, 87, 127, 0.6));
+}
+
+/* ============================================================================
+   CONTACT
+   ============================================================================ */
+
+.contact-grid { display: grid; grid-template-columns: 1fr; gap: clamp(2rem, 5vw, 3.5rem); align-items: start; }
+@media (min-width: 920px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
+.contact-direct { margin-block-start: 2rem; display: grid; gap: 0.85rem; }
+.contact-direct__row {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.15rem; border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.3s, background 0.3s, transform 0.3s;
+}
+@media (hover: hover) { .contact-direct__row:hover { border-color: rgba(216, 87, 127, 0.4); transform: translateX(-4px); } }
+.contact-direct__icon {
+  width: 2.75rem; height: 2.75rem; border-radius: 12px; flex: none;
+  display: grid; place-items: center; font-weight: 800; font-size: 1.2rem;
+  background: linear-gradient(135deg, rgba(165, 29, 70, 0.25), rgba(61, 151, 224, 0.15));
+  border: 1px solid rgba(216, 87, 127, 0.3); color: var(--accent-400);
+}
+.contact-direct__icon.wa { background: linear-gradient(135deg, #29d366, #17a74a); border-color: rgba(255,255,255,0.3); color: #fff; }
+.contact-direct__row strong { font-weight: 700; }
+
+/* ============================================================================
+   FINAL CTA
+   ============================================================================ */
+
+.final-cta { text-align: center; overflow: hidden; isolation: isolate; }
+.final-cta__inner { position: relative; z-index: 2; max-width: 44rem; margin-inline: auto; }
+
+/* ============================================================================
+   FOOTER
+   ============================================================================ */
+
+.site-footer { padding-block-end: clamp(2rem, 4vw, 3rem); }
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  padding-block-start: clamp(3rem, 6vw, 4.5rem);
+}
+@media (min-width: 720px) { .footer-grid { grid-template-columns: 1.5fr 1fr 1.2fr; } }
+.footer-col { display: flex; flex-direction: column; gap: 0.7rem; }
+.footer-col__title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; margin: 0 0 0.4rem; color: #fff; }
+.footer-bottom { padding-block: 2.5rem 0; text-align: center; border-block-start: 1px solid rgba(255, 255, 255, 0.06); margin-block-start: 2.5rem; }
+
+/* ============================================================================
+   CTA אחרי סקשן הווידאו
+   ============================================================================ */
+.process-cta { padding-block: clamp(2rem, 4vw, 3rem); }
+.process-cta__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  text-align: center;
+}
+.process-cta__btn { padding: 16px 40px; font-size: 1.05rem; }
+.process-cta__note { margin: 0; }

@@ -1,0 +1,169 @@
+import type { Metadata, Viewport } from "next";
+import { Rubik, Heebo } from "next/font/google";
+import { BUSINESS } from "@/lib/content";
+import { SITE_URL } from "@/lib/site";
+import "./globals.css";
+
+/* פונטים משתנים (variable): קובץ אחד לכל משפחה במקום 4 משקלים נפרדים */
+const display = Rubik({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-display",
+  display: "swap",
+  preload: true,
+});
+
+const body = Heebo({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-body",
+  display: "swap",
+  preload: true,
+});
+
+const TITLE = "AS digital — בניית אתרים, קידום אורגני ושיווק ממומן | אסף סאייג";
+const DESCRIPTION =
+  "אסף סאייג, מומחה דיגיטל ו-AI עם 6+ שנות ניסיון. בניית אתרים מהירים, קידום אורגני בגוגל ובבינה מלאכותית, שיווק ממומן ואוטומציות שמייצרות לקוחות.";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: TITLE,
+    template: "%s | AS digital",
+  },
+  description: DESCRIPTION,
+  applicationName: BUSINESS.name,
+  keywords: [
+    "בניית אתרים",
+    "קידום אורגני",
+    "קידום בגוגל",
+    "שיווק ממומן",
+    "שיווק דיגיטלי",
+    "אוטומציות",
+    "בינה מלאכותית",
+    "דפי נחיתה",
+    "אסף סאייג",
+    "AS digital",
+  ],
+  authors: [{ name: BUSINESS.owner }],
+  creator: BUSINESS.owner,
+  publisher: BUSINESS.name,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "he_IL",
+    url: SITE_URL,
+    siteName: BUSINESS.name,
+    title: "AS digital — נוכחות דיגיטלית שמייצרת לקוחות",
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AS digital — נוכחות דיגיטלית שמייצרת לקוחות",
+    description: "בניית אתרים, קידום אורגני, שיווק ממומן ו-AI. אסף סאייג.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  formatDetection: { telephone: true, email: true, address: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#050505",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": `${SITE_URL}/#business`,
+      name: BUSINESS.name,
+      description: DESCRIPTION,
+      url: SITE_URL,
+      telephone: "+972-54-766-4809",
+      email: BUSINESS.email,
+      image: `${SITE_URL}/video/process-poster.jpg`,
+      priceRange: "$$",
+      areaServed: { "@type": "Country", name: "IL" },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "המתכת 8",
+        addressLocality: "קדימה צורן",
+        addressCountry: "IL",
+      },
+      founder: { "@id": `${SITE_URL}/#asaf` },
+      knowsAbout: [
+        "בניית אתרים",
+        "קידום אורגני",
+        "שיווק ממומן",
+        "בינה מלאכותית",
+        "אוטומציות שיווק",
+      ],
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "שירותים",
+        itemListElement: [
+          "בניית אתרים ודפי נחיתה",
+          "קידום אורגני בגוגל",
+          "קידום בבינה מלאכותית",
+          "שיווק ממומן בגוגל ומטא",
+          "תוכן ואנליטיקה",
+          "אוטומציות ו-AI",
+        ].map((name) => ({
+          "@type": "Offer",
+          itemOffered: { "@type": "Service", name },
+        })),
+      },
+    },
+    {
+      "@type": "Person",
+      "@id": `${SITE_URL}/#asaf`,
+      name: BUSINESS.owner,
+      jobTitle: BUSINESS.role,
+      worksFor: { "@id": `${SITE_URL}/#business` },
+      url: SITE_URL,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: BUSINESS.name,
+      inLanguage: "he-IL",
+      publisher: { "@id": `${SITE_URL}/#business` },
+    },
+  ],
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="he" dir="rtl" className={`${display.variable} ${body.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      </head>
+      <body>
+        <a href="#main" className="skip-link">
+          דלגו לתוכן הראשי
+        </a>
+        {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </body>
+    </html>
+  );
+}
