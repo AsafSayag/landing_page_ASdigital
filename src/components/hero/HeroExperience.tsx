@@ -212,7 +212,7 @@ export default function HeroExperience() {
 
               {phase === "q1link" && (
                 <div className="dtx-stepblock">
-                  <StepHead n={Q1_LINK.n} title={Q1_LINK.title} lead={Q1_LINK.lead} />
+                  <StepHead title={Q1_LINK.title} lead={Q1_LINK.lead} />
                   <form
                     className="dtx-linkrow"
                     onSubmit={(e) => {
@@ -376,11 +376,10 @@ export default function HeroExperience() {
   );
 }
 
-function StepHead({ n, title, lead }: { n: string; title: string; lead?: string }) {
+function StepHead({ title, lead }: { title: string; lead?: string }) {
   return (
     <>
       <div className="dtx-step__head">
-        <span className="dtx-step__n ltr">{n}</span>
         <h2 className="dtx-step__title">{title}</h2>
       </div>
       {lead && <p className="dtx-step__lead">{lead}</p>}
@@ -402,7 +401,7 @@ function StepBlock({
   return (
     <div className={`dtx-stepblock ${locked ? "is-locked" : ""}`}>
       <div className="dtx-rise" style={{ ["--d" as string]: `${Math.max(base - 0.25, 0)}s` }}>
-        <StepHead n={q.n} title={q.title} lead={q.lead} />
+        <StepHead title={q.title} lead={q.lead} />
       </div>
       <div className="dtx-cards">{children}</div>
     </div>

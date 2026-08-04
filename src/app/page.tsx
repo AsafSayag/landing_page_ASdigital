@@ -15,7 +15,6 @@ import {
   RESULTS,
   CASE,
   ABOUT,
-  WHY,
   CONTACT,
   FINAL_CTA,
   PROCESS_CTA,
@@ -154,13 +153,9 @@ export default function Home() {
           <div className="ambient-glow" />
           <div className="ambient-grid" />
           <div className="container-x final-cta__inner" data-reveal>
-            <p className="eyebrow">{FINAL_CTA.eyebrow}</p>
             <h2 className="h2" style={{ maxWidth: "20ch", marginInline: "auto" }}>
               {FINAL_CTA.title}
             </h2>
-            <p className="lead" style={{ maxWidth: "44ch", marginInline: "auto", marginTop: "1.1rem" }}>
-              {FINAL_CTA.body}
-            </p>
             <div style={{ marginTop: "2rem", display: "flex", justifyContent: "center", gap: "0.85rem", flexWrap: "wrap" }}>
               <a
                 href={whatsappHref()}
@@ -263,33 +258,6 @@ export default function Home() {
                 ))}
               </div>
               <p className="about-signature">{ABOUT.signature}</p>
-            </div>
-          </div>
-        </section>
-
-        {/* ================= WHY ================= */}
-        <section className="section surface-950">
-          <div className="ambient-grid" />
-          <div className="container-x" style={{ position: "relative" }}>
-            <div className="section-head section-head--center" data-reveal>
-              <p className="eyebrow">{WHY.eyebrow}</p>
-              <h2 className="h2 heading-accent heading-accent--center">{WHY.title}</h2>
-            </div>
-            <div className="why-grid">
-              {WHY.items.map((item, i) => (
-                <div
-                  key={item.title}
-                  className="why-item"
-                  data-reveal
-                  style={{ ["--reveal-delay" as string]: `${(i % 4) * 0.07}s` }}
-                >
-                  <ArrowIcon className="why-arrow" width={22} height={22} />
-                  <h3 className="h3" style={{ marginBottom: "0.5rem" }}>
-                    {item.title}
-                  </h3>
-                  <p style={{ margin: 0, color: "var(--mist-200)" }}>{item.body}</p>
-                </div>
-              ))}
             </div>
           </div>
         </section>

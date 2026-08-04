@@ -1,19 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Rubik, Heebo } from "next/font/google";
+import { Frank_Ruhl_Libre, IBM_Plex_Sans_Hebrew } from "next/font/google";
 import { BUSINESS } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-/* פונטים משתנים (variable): קובץ אחד לכל משפחה במקום 4 משקלים נפרדים */
-const display = Rubik({
+/* כותרות: Frank Ruhl Libre — סריף עברי אלגנטי שמשדר אמינות ויוקרה.
+   גוף: IBM Plex Sans Hebrew — סאנס עברי מקצועי ומדויק. */
+const display = Frank_Ruhl_Libre({
   subsets: ["hebrew", "latin"],
   variable: "--font-display",
   display: "swap",
   preload: true,
 });
 
-const body = Heebo({
+const body = IBM_Plex_Sans_Hebrew({
   subsets: ["hebrew", "latin"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-body",
   display: "swap",
   preload: true,
