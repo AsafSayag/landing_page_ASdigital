@@ -10,6 +10,7 @@ import {
   Q3,
   Q4,
   INSIGHTS,
+  ECHO_LINE,
   GOAL_LINE,
   URGENCY_LINE,
   DIAG_FORM,
@@ -77,6 +78,8 @@ export default function HeroExperience() {
   };
 
   const insight = answers.q1id ? INSIGHTS[answers.q1id] : "";
+  /* הכותרת המכווצת מהדהדת את התשובה לשאלה 1 במקום את הסלוגן הכללי. */
+  const echo = answers.q1id ? ECHO_LINE[answers.q1id] : "";
   const goal = answers.q2id ? GOAL_LINE[answers.q2id] : "";
   const urgency = answers.q4id ? URGENCY_LINE[answers.q4id] : "";
 
@@ -176,11 +179,20 @@ export default function HeroExperience() {
             style={{ ["--d" as string]: "0.2s" }}
           >
             <h1 className="dtx-h1">
-              <span className="dtx-h1__l1">{INTRO.line1}</span>
-              <span className="dtx-h1__l2">
-                <span className="dtx-h1__a">{INTRO.line2a}</span>{" "}
-                <span className="dtx-h1__b">{INTRO.line2b}</span>
-              </span>
+              {echo ? (
+                /* key — כדי שמעבר בין תשובות יפעיל מחדש את אנימציית הכניסה */
+                <span key={echo} className="dtx-h1__l2 dtx-h1__echo">
+                  {echo}
+                </span>
+              ) : (
+                <>
+                  <span className="dtx-h1__l1">{INTRO.line1}</span>
+                  <span className="dtx-h1__l2">
+                    <span className="dtx-h1__a">{INTRO.line2a}</span>{" "}
+                    <span className="dtx-h1__b">{INTRO.line2b}</span>
+                  </span>
+                </>
+              )}
             </h1>
           </div>
 
