@@ -893,8 +893,14 @@ textarea.field { resize: vertical; min-height: 7rem; }
   border-color: rgba(20, 6, 11, 0.1);
   box-shadow: 0 14px 34px -24px rgba(94, 15, 41, 0.4);
 }
-/* רקע הסקשן הבהיר מעט חמים כדי שהכרטיסים הלבנים יבלטו */
+/* רקע הסקשן הבהיר מעט חמים */
 .light-zone .surface-900 { background: #f7f0f3; }
+
+/* דיוקן "נעים להכיר" נשאר כרטיס כהה — ניגוד יפה על הסקשן הבהיר */
+.light-zone .about-portrait {
+  background: linear-gradient(160deg, #2f0e1d, #120409);
+  border-color: rgba(216, 87, 127, 0.35);
+}
 
 /* זוהר הרקע הכהה מלכלך על בהיר — מסירים אותו באזור הבהיר */
 .light-zone .ambient-glow { display: none; }

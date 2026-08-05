@@ -174,8 +174,31 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ============ מכאן: תמה בהירה (שירותים + תהליך) ============ */}
+        {/* ============ נעים להכיר — המודול היחיד בתמה בהירה ============ */}
         <div className="light-zone on-light">
+        {/* ================= ABOUT ================= */}
+        <section id="about" className="section surface-900">
+          <div className="container-x about-grid">
+            <div className="about-portrait" data-reveal aria-hidden="true">
+              <div className="about-portrait__ring" />
+              <div className="about-portrait__mono">AS</div>
+              <div className="about-portrait__glow" />
+            </div>
+            <div className="about-copy" data-reveal>
+              <p className="eyebrow">{ABOUT.eyebrow}</p>
+              <h2 className="h2 heading-accent">{ABOUT.title}</h2>
+              <div style={{ marginTop: "1.5rem", display: "grid", gap: "1.1rem" }}>
+                {ABOUT.paragraphs.map((p, i) => (
+                  <p key={i} className="lead" style={{ margin: 0 }}>
+                    {p}
+                  </p>
+                ))}
+              </div>
+              <p className="about-signature">{ABOUT.signature}</p>
+            </div>
+          </div>
+        </section>
+        </div>{/* light-zone end — רק נעים להכיר בהיר */}
 
         {/* ================= SERVICES ================= */}
         <section id="services" className="section surface-950">
@@ -241,30 +264,6 @@ export default function Home() {
             </ol>
           </div>
         </section>
-        </div>{/* light-zone end — מכאן ועד הסוף כהה */}
-
-                {/* ================= ABOUT ================= */}
-        <section id="about" className="section surface-900">
-          <div className="container-x about-grid">
-            <div className="about-portrait" data-reveal aria-hidden="true">
-              <div className="about-portrait__ring" />
-              <div className="about-portrait__mono">AS</div>
-              <div className="about-portrait__glow" />
-            </div>
-            <div className="about-copy" data-reveal>
-              <p className="eyebrow">{ABOUT.eyebrow}</p>
-              <h2 className="h2 heading-accent">{ABOUT.title}</h2>
-              <div style={{ marginTop: "1.5rem", display: "grid", gap: "1.1rem" }}>
-                {ABOUT.paragraphs.map((p, i) => (
-                  <p key={i} className="lead" style={{ margin: 0 }}>
-                    {p}
-                  </p>
-                ))}
-              </div>
-              <p className="about-signature">{ABOUT.signature}</p>
-            </div>
-          </div>
-        </section>
 
         {/* ================= CONTACT ================= */}
         <section id="contact" className="section surface-900">
@@ -319,9 +318,13 @@ export default function Home() {
         <hr className="seam" />
         <div className="container-x footer-grid">
           <div className="footer-brand">
-            <div className="brand-mark" style={{ fontSize: "1.6rem" }}>
-              AS<span style={{ opacity: 0.62, fontWeight: 500, margin: "0 0.14em" }}>Digital</span>
-            </div>
+            <Image
+              src="/images/as-logo.png"
+              alt="AS Digital"
+              width={2576}
+              height={570}
+              style={{ height: "2.6rem", width: "auto" }}
+            />
             <p style={{ color: "var(--mist-200)", maxWidth: "34ch", marginTop: "0.85rem" }}>
               {FOOTER.tagline}
             </p>
