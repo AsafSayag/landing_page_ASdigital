@@ -6,10 +6,13 @@ import {
   INTRO,
   Q1,
   Q1_LINK,
+  Q1_SOURCE,
   Q2,
   Q3,
   Q4,
   INSIGHTS,
+  ECHO_LINE,
+  ECHO_DEPTH,
   GOAL_LINE,
   URGENCY_LINE,
   DIAG_FORM,
@@ -22,7 +25,7 @@ import "./hero.css";
 
 const TwinCanvas = dynamic(() => import("./TwinCanvas"), { ssr: false });
 
-type Phase = "q1" | "q1link" | "q2" | "q3" | "q4" | "form";
+type Phase = "q1" | "q1link" | "q1source" | "q2" | "q3" | "q4" | "form";
 
 
 function useWebGL() {
@@ -40,6 +43,7 @@ function useWebGL() {
 
 type Answers = {
   q1?: string; q1id?: string;
+  q1src?: string; q1srcid?: string;
   q2?: string; q2id?: string;
   q3?: string; q3id?: string;
   q4?: string; q4id?: string;
@@ -66,10 +70,11 @@ export default function HeroExperience() {
     if (locked) return;
     setSelected(id);
     setLocked(true);
-    setAnswers((a) => ({ ...a, ...patch }));
     setFirstPaint(false);
-    // האנרגיה נספגת סביב הענן, ורק אז השאלה הבאה
+    // האנרגיה נספגת סביב הענן, ורק אז השאלה הבאה. את התשובות שומרים כאן
+    // ולא בלחיצה — כך הכותרת המהדהדת מתחלפת *יחד* עם השאלה, לא לפניה.
     setTimeout(() => {
+      setAnswers((a) => ({ ...a, ...patch }));
       setPhase(next);
       setSelected(null);
       setLocked(false);
@@ -77,6 +82,13 @@ export default function HeroExperience() {
   };
 
   const insight = answers.q1id ? INSIGHTS[answers.q1id] : "";
+  /* הכותרת המכווצת מהדהדת תמיד את הבחירה *האחרונה* — כך היא מתחלפת
+     בכל שאלה ולא נתקעת על התשובה הראשונה. */
+  const lastId =
+    answers.q4id ?? answers.q3id ?? answers.q2id ?? answers.q1srcid ?? answers.q1id;
+  const echo = lastId ? ECHO_LINE[lastId] : "";
+  /* התג מתכהה עם כל תשובה — מזכוכית שקופה בהתחלה לרקע אטום בסוף */
+  const echoDepth = ECHO_DEPTH[phase] ?? 0;
   const goal = answers.q2id ? GOAL_LINE[answers.q2id] : "";
   const urgency = answers.q4id ? URGENCY_LINE[answers.q4id] : "";
 
@@ -84,6 +96,7 @@ export default function HeroExperience() {
     const lines = [
       "היי אסף, סיימתי את האבחון באתר של AS digital 👋",
       answers.q1 && `מצב נוכחי: ${answers.q1}`,
+      answers.q1src && `מאיפה מגיעים לקוחות היום: ${answers.q1src}`,
       siteUrl && `קישור: ${siteUrl}`,
       answers.q2 && `מטרה: ${answers.q2}`,
       answers.q3 && `תחום: ${answers.q3}`,
@@ -173,14 +186,23 @@ export default function HeroExperience() {
           {/* ---------- כותרת ראשית — נראית מיד ---------- */}
           <div
             className={`dtx-headline dtx-rise ${phase !== "q1" ? "dtx-headline--compact" : ""}`}
-            style={{ ["--d" as string]: "0.2s" }}
+            style={{ ["--d" as string]: "0.2s", ["--echo-depth" as string]: echoDepth }}
           >
             <h1 className="dtx-h1">
-              <span className="dtx-h1__l1">{INTRO.line1}</span>
-              <span className="dtx-h1__l2">
-                <span className="dtx-h1__a">{INTRO.line2a}</span>{" "}
-                <span className="dtx-h1__b">{INTRO.line2b}</span>
-              </span>
+              {echo ? (
+                /* key — כדי שמעבר בין תשובות יפעיל מחדש את אנימציית הכניסה */
+                <span key={echo} className="dtx-h1__l2 dtx-h1__echo">
+                  {echo}
+                </span>
+              ) : (
+                <>
+                  <span className="dtx-h1__l1">{INTRO.line1}</span>
+                  <span className="dtx-h1__l2">
+                    <span className="dtx-h1__a">{INTRO.line2a}</span>{" "}
+                    <span className="dtx-h1__b">{INTRO.line2b}</span>
+                  </span>
+                </>
+              )}
             </h1>
           </div>
 
@@ -201,13 +223,37 @@ export default function HeroExperience() {
                       selected={selected === o.id}
                       dimmed={!!selected && selected !== o.id}
                       onClick={() =>
-                        advance(o.id === "site-weak" ? "q1link" : "q2", { q1: o.label, q1id: o.id }, o.id)
+                        advance(
+                          o.id === "site-weak" ? "q1link" : o.id === "no-site" ? "q1source" : "q2",
+                          { q1: o.label, q1id: o.id },
+                          o.id
+                        )
                       }
                     >
                       {o.label}
                     </DiagCard>
                   ))}
                 </StepBlock>
+              )}
+
+              {phase === "q1source" && (
+                /* השאלה מוצגת בתג הזכוכית שמעל, ולכן כאן רק האפשרויות */
+                <div className={`dtx-stepblock ${locked ? "is-locked" : ""}`}>
+                  <div className="dtx-cards">
+                    {Q1_SOURCE.options.map((o, i) => (
+                      <DiagCard
+                        key={o.id}
+                        i={i}
+                        base={cardsBase}
+                        selected={selected === o.id}
+                        dimmed={!!selected && selected !== o.id}
+                        onClick={() => advance("q2", { q1src: o.label, q1srcid: o.id }, o.id)}
+                      >
+                        {o.label}
+                      </DiagCard>
+                    ))}
+                  </div>
+                </div>
               )}
 
               {phase === "q1link" && (
