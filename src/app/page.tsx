@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import HeroExperience from "@/components/hero/HeroExperience";
 import ProcessScroll from "@/components/ProcessScroll";
 import PainPoints from "@/components/PainPoints";
+import ThemeShift from "@/components/ThemeShift";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import ScrollReveal from "@/components/ScrollReveal";
 import ContactForm from "@/components/ContactForm";
@@ -174,6 +175,10 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ============ מעבר אנימטיבי לתמה בהירה ============ */}
+        <ThemeShift variant="to-light" />
+        <div className="light-zone on-light">
+
         {/* ================= SERVICES ================= */}
         <section id="services" className="section surface-950">
           <div className="ambient-glow" style={{ opacity: 0.5 }} />
@@ -238,6 +243,10 @@ export default function Home() {
             </ol>
           </div>
         </section>
+        </div>{/* light-zone end */}
+
+        {/* ============ מעבר אנימטיבי חזרה לתמה כהה — מכאן ועד הסוף כהה ============ */}
+        <ThemeShift variant="to-dark" />
 
                 {/* ================= ABOUT ================= */}
         <section id="about" className="section surface-900">
@@ -308,8 +317,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        
       </main>
 
       {/* ================= FOOTER ================= */}

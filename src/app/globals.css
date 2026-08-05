@@ -499,12 +499,13 @@ button { font: inherit; }
   gap: 0.6rem;
   padding: 0.85rem 1.15rem 0.85rem 1.35rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  /* גוון כהה שקוף — נשאר קריא גם מעל האזור הכהה וגם מעל האזור הבהיר */
+  background: rgba(24, 8, 14, 0.55);
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
   color: #fff;
   font-weight: 700;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 12px 34px rgba(10, 2, 6, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.28);
   transform: translateY(140%);
   opacity: 0;
@@ -866,3 +867,86 @@ textarea.field { resize: vertical; min-height: 7rem; }
 }
 .process-cta__btn { padding: 16px 40px; font-size: 1.05rem; }
 .process-cta__note { margin: 0; }
+
+/* ============================================================================
+   LIGHT ZONE — מהמודול "אז איך עושים את זה?" והלאה הדף עובר לתמה בהירה.
+   כל הצבעים באתר מבוססי-משתנים, ולכן הגדרה מחדש של הטוקנים כאן מהפכת
+   את כל הסקשנים הנכללים לרקע בהיר וטקסט כהה — בלי לגעת בכל רכיב בנפרד.
+   ============================================================================ */
+.light-zone {
+  --ink-950: #f4edf0;   /* משטח בהיר ראשי (warm off-white) */
+  --ink-900: #ffffff;   /* משטח לבן */
+  --ink-850: #f8f2f5;
+  --ink-800: #ede1e7;
+  --white: #1a0c12;     /* מה שהיה טקסט לבן → הופך לכהה */
+  --fg: #1a0c12;
+  --mist-200: #4c3742;  /* טקסט משני כהה */
+  --mist-400: #806b76;  /* caption */
+  --accent-400: #a51d46;/* גוון accent קריא על רקע בהיר */
+  background: #f4edf0;
+  color: #1a0c12;
+}
+
+/* משטחים שהוגדרו עם שקיפות לבנה — מקבלים טיפול בהיר */
+.light-zone .process-step {
+  background: #fff;
+  border-color: rgba(20, 6, 11, 0.08);
+}
+
+/* זוהר הרקע הכהה מלכלך על בהיר — מסירים אותו באזור הבהיר */
+.light-zone .ambient-glow { display: none; }
+
+/* ============================================================================
+   THEME SHIFT — מעבר צבע אנימטיבי (scrub לפי גלילה) בין כהה לבהיר ולהפך.
+   הצבע נמרח אלכסונית לפי --p (0→1), עם קצה זוהר ופס אור שחולף באמצע.
+   ============================================================================ */
+.theme-shift {
+  --p: 0;
+  position: relative;
+  height: clamp(300px, 46vh, 520px);
+  overflow: hidden;
+  isolation: isolate;
+}
+.theme-shift--to-light { background: #1b0710; }  /* צבע הסקשן הכהה שמעל */
+.theme-shift--to-dark  { background: #ffffff; }  /* צבע הסקשן הבהיר שמעל */
+
+/* שכבת היעד שנחשפת באלכסון מלמטה למעלה לפי ההתקדמות */
+.theme-shift__fill {
+  position: absolute;
+  inset: -2px 0;
+  z-index: 1;
+  clip-path: polygon(
+    0 calc(100% - var(--p) * 150%),
+    100% calc(100% - var(--p) * 100%),
+    100% 100%,
+    0 100%
+  );
+  will-change: clip-path;
+}
+.theme-shift--to-light .theme-shift__fill {
+  background: #f4edf0;
+  filter: drop-shadow(0 -16px 40px rgba(216, 87, 127, 0.6));
+}
+.theme-shift--to-dark .theme-shift__fill {
+  background: #1b0710;
+  filter: drop-shadow(0 -16px 42px rgba(108, 189, 245, 0.55));
+}
+
+/* פס אור אלכסוני שחולף על פני הרצועה בזמן המעבר */
+.theme-shift__shine {
+  position: absolute;
+  inset: -20% -10%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 44%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 56%
+  );
+  transform: translateX(calc((var(--p) - 0.5) * 265%));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-shift__shine { display: none; }
+}
