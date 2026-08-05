@@ -179,9 +179,14 @@ export default function Home() {
         {/* ================= ABOUT ================= */}
         <section id="about" className="section surface-900">
           <div className="container-x about-grid">
-            <div className="about-portrait" data-reveal aria-hidden="true">
-              <div className="about-portrait__ring" />
-              <div className="about-portrait__mono">AS</div>
+            <div className="about-portrait" data-reveal>
+              <Image
+                src="/images/asaf-portrait.webp"
+                alt={`${ABOUT.title} — מייסד ${BUSINESS.name}`}
+                fill
+                sizes="(min-width: 900px) 22rem, 70vw"
+                className="about-portrait__img"
+              />
               <div className="about-portrait__glow" />
             </div>
             <div className="about-copy" data-reveal>
@@ -194,7 +199,6 @@ export default function Home() {
                   </p>
                 ))}
               </div>
-              <p className="about-signature">{ABOUT.signature}</p>
             </div>
           </div>
         </section>

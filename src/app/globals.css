@@ -234,14 +234,16 @@ button { font: inherit; }
   transition: transform 0.35s var(--ease-brand), box-shadow 0.35s, background 0.35s, border-color 0.35s;
 }
 
+/* CTA ראשי — לבן זוהר */
 .glass-btn--primary {
-  --_bg: linear-gradient(135deg, rgba(61, 151, 224, 0.96), rgba(28, 84, 140, 0.96));
-  border-color: rgba(108, 189, 245, 0.85);
+  --_bg: linear-gradient(135deg, #ffffff, #eef1f6);
+  color: var(--ink-950);
+  border-color: rgba(255, 255, 255, 0.9);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 0 0 1px rgba(108, 189, 245, 0.35),
-    0 10px 34px rgba(24, 70, 130, 0.5),
-    0 0 22px rgba(61, 151, 224, 0.35);
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 0 0 1px rgba(255, 255, 255, 0.45),
+    0 10px 34px rgba(10, 2, 6, 0.45),
+    0 0 26px rgba(255, 255, 255, 0.42);
 }
 
 .glass-btn__icon { width: 1.15em; height: 1.15em; flex: none; }
@@ -255,17 +257,24 @@ button { font: inherit; }
   transform: translateX(-120%);
   transition: transform 0.6s var(--ease-brand);
 }
+/* על כפתור לבן — נצנוץ כהה, אחרת הוא לא נראה */
+.glass-btn--primary::after {
+  background: linear-gradient(115deg, transparent 30%, rgba(18, 4, 9, 0.12) 50%, transparent 70%);
+}
 
 @media (hover: hover) {
   .glass-btn:hover { transform: translateY(-2px) scale(1.02); border-color: rgba(255, 255, 255, 0.4); }
-  .glass-btn--primary:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 0 0 1px rgba(108,189,245,0.55), 0 16px 44px rgba(24,70,130,0.65), 0 0 30px rgba(61,151,224,0.5); }
+  .glass-btn--primary:hover {
+    border-color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), 0 0 0 1px rgba(255,255,255,0.6), 0 16px 44px rgba(10,2,6,0.55), 0 0 40px rgba(255,255,255,0.6);
+  }
   .glass-btn:hover::after { transform: translateX(120%); }
 }
 .glass-btn:active { transform: scale(0.97); }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass-btn { background: var(--ink-800); }
-  .glass-btn--primary { background: #1f5f9c; }
+  .glass-btn--primary { background: #fff; color: var(--ink-950); }
 }
 
 /* וריאנט על משטח בהיר */
@@ -760,23 +769,17 @@ textarea.field { resize: vertical; min-height: 7rem; }
   overflow: hidden;
   isolation: isolate;
 }
-.about-portrait__mono {
-  font-family: var(--font-display); font-weight: 800; font-size: 6rem; letter-spacing: -0.04em;
-  background: linear-gradient(135deg, var(--accent-400), var(--azure-400));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  z-index: 2;
-}
-.about-portrait__ring {
-  position: absolute; inset: 12%; border-radius: 50%;
-  border: 1px dashed rgba(216, 87, 127, 0.4);
+.about-portrait__img {
+  object-fit: cover;
+  object-position: 50% 25%;
   z-index: 1;
 }
+/* וינייטה עדינה שמחברת את התמונה למסגרת */
 .about-portrait__glow {
-  position: absolute; inset: 0;
-  background: radial-gradient(60% 60% at 50% 100%, rgba(165, 29, 70, 0.35), transparent 65%),
-              radial-gradient(50% 50% at 20% 10%, rgba(61, 151, 224, 0.25), transparent 60%);
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgba(18, 4, 9, 0.4)),
+              radial-gradient(80% 80% at 50% 40%, transparent 55%, rgba(18, 4, 9, 0.22));
 }
-.about-signature { margin-block-start: 1.75rem; font-family: var(--font-display); font-weight: 700; color: var(--accent-400); }
 @media (min-width: 900px) {
   .about-grid { grid-template-columns: 0.85fr 1.15fr; }
 }
