@@ -8,5 +8,8 @@
 .vercel
 next-env.d.ts
 
+# מטמון קומפילציה של TypeScript — נוצר מחדש בכל build
+*.tsbuildinfo
+
 # local editor/tooling settings
 .claude/settings.local.json
