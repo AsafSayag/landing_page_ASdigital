@@ -198,11 +198,14 @@
 .dtx-h1 { margin: 0; font-family: var(--font-display); line-height: 1.14; }
 .dtx-h1__l1 {
   display: block;
-  font-weight: 500;
-  font-size: clamp(0.95rem, 1.9vw, 1.25rem);
-  color: rgba(207, 238, 255, 0.72);
-  letter-spacing: 0.01em;
-  margin-block-end: 0.55rem;
+  font-weight: 600;
+  /* מובייל: 5vw — בטלפון של 390px זה ~19.5px מול 15.2px קודם. דסקטופ נעצר ב-1.5rem. */
+  font-size: clamp(1.25rem, 5vw, 1.5rem);
+  color: rgba(226, 245, 255, 0.95);
+  letter-spacing: 0.005em;
+  line-height: 1.35;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7);
+  margin-block-end: 0.8rem;
 }
 .dtx-h1__l2 {
   display: block;

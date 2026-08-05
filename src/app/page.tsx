@@ -7,6 +7,7 @@ import PainPoints from "@/components/PainPoints";
 import WhatsAppFab from "@/components/WhatsAppFab";
 import ScrollReveal from "@/components/ScrollReveal";
 import ContactForm from "@/components/ContactForm";
+import ExpandableCard from "@/components/ExpandableCard";
 import { SERVICE_ICONS, WhatsAppIcon, PhoneIcon, ArrowIcon } from "@/components/icons";
 import {
   BUSINESS,
@@ -81,17 +82,12 @@ export default function Home() {
 
             <div className="results-grid">
               {RESULTS.cards.map((c, i) => (
-                <article
+                <ExpandableCard
                   key={c.title}
-                  className="card"
-                  data-reveal
-                  style={{ ["--reveal-delay" as string]: `${(i % 3) * 0.08}s` }}
-                >
-                  <h3 className="h3" style={{ marginBottom: "0.65rem" }}>
-                    {c.title}
-                  </h3>
-                  <p style={{ margin: 0, color: "var(--mist-200)" }}>{c.body}</p>
-                </article>
+                  title={c.title}
+                  body={c.body}
+                  revealDelay={`${(i % 3) * 0.08}s`}
+                />
               ))}
             </div>
 
@@ -222,19 +218,14 @@ export default function Home() {
               {SERVICES.items.map((item, i) => {
                 const Icon = SERVICE_ICONS[item.key];
                 return (
-                  <article
+                  <ExpandableCard
                     key={item.key}
-                    className="card"
-                    data-reveal
-                    style={{ ["--reveal-delay" as string]: `${(i % 3) * 0.08}s` }}
-                  >
-                    <span className="card-icon">{Icon ? <Icon /> : null}</span>
-                    <h3 className="h3">{item.name}</h3>
-                    <p className="tagline-accent" style={{ margin: "0.35rem 0 0.75rem" }}>
-                      {item.tagline}
-                    </p>
-                    <p style={{ margin: 0, color: "var(--mist-200)" }}>{item.body}</p>
-                  </article>
+                    title={item.name}
+                    tagline={item.tagline}
+                    body={item.body}
+                    icon={Icon ? <Icon /> : null}
+                    revealDelay={`${(i % 3) * 0.08}s`}
+                  />
                 );
               })}
             </div>
@@ -251,23 +242,6 @@ export default function Home() {
                 {PROCESS.intro}
               </p>
             </div>
-
-            <ol className="process-grid">
-              {PROCESS.steps.map((step, i) => (
-                <li
-                  key={step.n}
-                  className="process-step"
-                  data-reveal
-                  style={{ ["--reveal-delay" as string]: `${(i % 4) * 0.08}s` }}
-                >
-                  <span className="process-num ltr">{step.n}</span>
-                  <h3 className="h3" style={{ marginBottom: "0.5rem" }}>
-                    {step.title}
-                  </h3>
-                  <p style={{ margin: 0, color: "var(--mist-200)" }}>{step.body}</p>
-                </li>
-              ))}
-            </ol>
           </div>
         </section>
 
@@ -276,7 +250,6 @@ export default function Home() {
           <div className="ambient-glow" style={{ opacity: 0.6 }} />
           <div className="container-x contact-grid" style={{ position: "relative" }}>
             <div className="contact-copy" data-reveal>
-              <p className="eyebrow">{CONTACT.eyebrow}</p>
               <h2 className="h2 heading-accent">{CONTACT.title}</h2>
               <p className="lead" style={{ marginTop: "1.25rem" }}>
                 {CONTACT.intro}

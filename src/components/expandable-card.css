@@ -1,0 +1,73 @@
+/* ============================================================================
+   כרטיס נפתח — כותרת לחיצה, גוף שנפתח מתחתיה.
+   ============================================================================ */
+
+/* העוטף הוא פריט הגריד; הכרטיס ממלא אותו. */
+.xcard-wrap { display: grid; }
+
+.xcard {
+  /* הריפוד עובר לכפתור עצמו כדי שכל שטח הכותרת יהיה לחיץ. */
+  padding: 0;
+  /* הכרטיס נצמד לראש השורה במקום להימתח לגובה כרטיס פתוח לידו. */
+  align-self: start;
+}
+
+.xcard__head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  padding: clamp(1.15rem, 2.4vw, 1.6rem);
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+/* בכרטיס בלי אייקון — שתי עמודות בלבד. */
+.xcard__head:not(:has(.xcard__icon)) { grid-template-columns: 1fr auto; }
+
+.xcard__icon {
+  /* גרסה מוקטנת של .card-icon: בשורת הכותרת, לא מעליה. */
+  width: 3rem;
+  height: 3rem;
+  border-radius: 14px;
+  margin-block-end: 0;
+}
+.xcard__icon svg { width: 1.6rem; height: 1.6rem; }
+
+.xcard__titles { display: grid; gap: 0.2rem; min-width: 0; }
+.xcard__title { display: block; }
+.xcard__tagline { font-size: 0.95rem; line-height: 1.4; }
+
+.xcard__chev {
+  width: 1.4rem;
+  height: 1.4rem;
+  flex: none;
+  color: var(--mist-400);
+  transition: transform 0.35s var(--ease-brand), color 0.35s;
+}
+.xcard--open .xcard__chev { transform: rotate(180deg); color: var(--accent-400); }
+.xcard__head:hover .xcard__chev { color: var(--accent-400); }
+
+.xcard__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s var(--ease-brand);
+}
+.xcard--open .xcard__panel { grid-template-rows: 1fr; }
+.xcard__panelInner { overflow: hidden; }
+
+.xcard__body {
+  margin: 0;
+  padding: 0 clamp(1.15rem, 2.4vw, 1.6rem) clamp(1.15rem, 2.4vw, 1.6rem);
+  color: var(--mist-200);
+}
+
+/* על משטח בהיר */
+.on-light .xcard__body { color: #4a3b41; }
+
+/* כשהמשתמש ביקש לעצור תנועה — פתיחה מיידית, בלי החלקה. */
+html.a11y-no-motion .xcard__panel { transition: none; }
