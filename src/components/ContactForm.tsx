@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BUSINESS, CONTACT, whatsappHref } from "@/lib/content";
 import { WhatsAppIcon, PhoneIcon } from "./icons";
 import type { PainDetail } from "./PainPoints";
+import "./contact-form.css";
 
 export default function ContactForm() {
   const [name, setName] = useState("");
@@ -43,15 +44,17 @@ export default function ContactForm() {
   )}&body=${encodeURIComponent(buildMessage())}`;
 
   return (
-    <form onSubmit={onSubmit} className="glass" style={{ borderRadius: 24, padding: "clamp(1.5rem, 4vw, 2.5rem)" }}>
-      <div style={{ display: "grid", gap: "1.15rem" }}>
-        {pain && (
-          <div className="pain-note" role="status">
-            <span className="pain-note__label">מה שסימנת</span>
-            <p className="pain-note__q">{pain.label}</p>
-            <p className="pain-note__a">{pain.answer}</p>
-          </div>
-        )}
+    <form onSubmit={onSubmit} className="glass cf">
+      {pain && (
+        <div className="pain-note" role="status">
+          <span className="pain-note__label">מה שסימנת</span>
+          <p className="pain-note__q">{pain.label}</p>
+          <p className="pain-note__a">{pain.answer}</p>
+        </div>
+      )}
+
+      {/* שם וטלפון זה לצד זה — חוסך שורה שלמה מגובה הטופס */}
+      <div className="cf__row">
         <div>
           <label htmlFor="cf-name" className="field-label">
             {CONTACT.formNameLabel}
@@ -83,39 +86,38 @@ export default function ContactForm() {
             placeholder="050-0000000"
           />
         </div>
-
-        <div>
-          <label htmlFor="cf-msg" className="field-label">
-            {CONTACT.formMsgLabel}
-          </label>
-          <textarea
-            id="cf-msg"
-            className="field"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder={CONTACT.formMsgPlaceholder}
-          />
-        </div>
-
-        <button type="submit" className="glass-btn glass-btn--primary" style={{ width: "100%", padding: "16px" }}>
-          <WhatsAppIcon className="glass-btn__icon" />
-          {CONTACT.submit}
-        </button>
-
-        <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-          <a href={`tel:${BUSINESS.phoneDial}`} className="glass-btn" style={{ flex: "1 1 10rem" }}>
-            <PhoneIcon width={18} height={18} />
-            <span className="ltr">{BUSINESS.phoneDisplay}</span>
-          </a>
-          <a href={mailHref} className="glass-btn" style={{ flex: "1 1 10rem" }}>
-            שליחת מייל
-          </a>
-        </div>
-
-        <p className="caption" style={{ textAlign: "center", margin: 0 }}>
-          פרטייך נשלחים ישירות אליי — ללא צד שלישי, ללא ספאם.
-        </p>
       </div>
+
+      <div>
+        <label htmlFor="cf-msg" className="field-label">
+          {CONTACT.formMsgLabel}
+        </label>
+        <textarea
+          id="cf-msg"
+          className="field cf__msg"
+          rows={2}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder={CONTACT.formMsgPlaceholder}
+        />
+      </div>
+
+      <button type="submit" className="glass-btn glass-btn--primary cf__submit">
+        <WhatsAppIcon className="glass-btn__icon" />
+        {CONTACT.submit}
+      </button>
+
+      <div className="cf__alt">
+        <a href={`tel:${BUSINESS.phoneDial}`} className="glass-btn">
+          <PhoneIcon width={18} height={18} />
+          <span className="ltr">{BUSINESS.phoneDisplay}</span>
+        </a>
+        <a href={mailHref} className="glass-btn">
+          שליחת מייל
+        </a>
+      </div>
+
+      <p className="caption cf__note">פרטייך נשלחים ישירות אליי — ללא צד שלישי, ללא ספאם.</p>
     </form>
   );
 }
