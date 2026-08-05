@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Frank_Ruhl_Libre, IBM_Plex_Sans_Hebrew } from "next/font/google";
 import { BUSINESS } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
+import AccessibilityWidget, { A11Y_BOOT_SCRIPT } from "@/components/AccessibilityWidget";
 import "./globals.css";
 
 /* כותרות: Frank Ruhl Libre — סריף עברי אלגנטי שמשדר אמינות ויוקרה.
@@ -152,15 +153,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="he" dir="rtl" className={`${display.variable} ${body.variable}`}>
+    // suppressHydrationWarning: סקריפט האתחול של הנגישות מוסיף מחלקות ל-<html>
+    // לפני ההידרציה, ולכן ה-HTML מהשרת לעולם לא יתאים למצב בדפדפן. ההשתקה
+    // חלה על רמה אחת בלבד — על התכונות של האלמנט הזה.
+    <html
+      lang="he"
+      dir="rtl"
+      className={`${display.variable} ${body.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* מחיל הגדרות נגישות שמורות לפני הצביעה הראשונה — בלי זה משתמש
+            שהגדיל טקסט היה רואה הבזק של הגודל המקורי בכל טעינת עמוד. */}
+        <script dangerouslySetInnerHTML={{ __html: A11Y_BOOT_SCRIPT }} />
       </head>
       <body>
         <a href="#main" className="skip-link">
           דלגו לתוכן הראשי
         </a>
         {children}
+        <AccessibilityWidget />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
