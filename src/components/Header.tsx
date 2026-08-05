@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { BUSINESS, NAV, whatsappHref } from "@/lib/content";
 import { WhatsAppIcon, MenuIcon, CloseIcon, PhoneIcon } from "./icons";
 
@@ -25,8 +26,15 @@ export default function Header() {
   return (
     <header className={`site-header ${scrolled ? "site-header--scrolled" : ""}`}>
       <div className="container-x" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "4.75rem" }}>
-        <a href="#top" className="brand-mark" aria-label="AS digital — לדף הבית">
-          AS<span style={{ opacity: 0.62, fontWeight: 500, margin: "0 0.14em" }}>Digital</span>
+        <a href="#top" className="brand-logo" aria-label="AS digital — לדף הבית">
+          <Image
+            src="/images/as-logo.png"
+            alt="AS Digital"
+            width={2576}
+            height={570}
+            priority
+            style={{ height: "clamp(1.9rem, 3.4vw, 2.4rem)", width: "auto" }}
+          />
         </a>
 
         {/* ניווט דסקטופ */}
@@ -113,6 +121,7 @@ export default function Header() {
       )}
 
       <style>{`
+        .brand-logo { display: inline-flex; align-items: center; }
         .header-nav { display: none; gap: 2rem; }
         .header-actions { display: flex; align-items: center; gap: 0.85rem; }
         .header-phone { display: none; align-items: center; gap: 0.45rem; font-weight: 600; color: var(--mist-200); transition: color .25s; }

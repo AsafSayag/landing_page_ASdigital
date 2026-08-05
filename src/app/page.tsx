@@ -15,7 +15,6 @@ import {
   RESULTS,
   CASE,
   ABOUT,
-  WHY,
   CONTACT,
   FINAL_CTA,
   PROCESS_CTA,
@@ -154,13 +153,9 @@ export default function Home() {
           <div className="ambient-glow" />
           <div className="ambient-grid" />
           <div className="container-x final-cta__inner" data-reveal>
-            <p className="eyebrow">{FINAL_CTA.eyebrow}</p>
             <h2 className="h2" style={{ maxWidth: "20ch", marginInline: "auto" }}>
               {FINAL_CTA.title}
             </h2>
-            <p className="lead" style={{ maxWidth: "44ch", marginInline: "auto", marginTop: "1.1rem" }}>
-              {FINAL_CTA.body}
-            </p>
             <div style={{ marginTop: "2rem", display: "flex", justifyContent: "center", gap: "0.85rem", flexWrap: "wrap" }}>
               <a
                 href={whatsappHref()}
@@ -178,6 +173,36 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ============ נעים להכיר — המודול היחיד בתמה בהירה ============ */}
+        <div className="light-zone on-light">
+        {/* ================= ABOUT ================= */}
+        <section id="about" className="section surface-900">
+          <div className="container-x about-grid">
+            <div className="about-portrait" data-reveal>
+              <Image
+                src="/images/asaf-portrait.webp"
+                alt={`${ABOUT.title} — מייסד ${BUSINESS.name}`}
+                fill
+                sizes="(min-width: 900px) 22rem, 70vw"
+                className="about-portrait__img"
+              />
+              <div className="about-portrait__glow" />
+            </div>
+            <div className="about-copy" data-reveal>
+              <p className="eyebrow">{ABOUT.eyebrow}</p>
+              <h2 className="h2 heading-accent">{ABOUT.title}</h2>
+              <div style={{ marginTop: "1.5rem", display: "grid", gap: "1.1rem" }}>
+                {ABOUT.paragraphs.map((p, i) => (
+                  <p key={i} className="lead" style={{ margin: 0 }}>
+                    {p}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+        </div>{/* light-zone end — רק נעים להכיר בהיר */}
 
         {/* ================= SERVICES ================= */}
         <section id="services" className="section surface-950">
@@ -244,56 +269,6 @@ export default function Home() {
           </div>
         </section>
 
-                {/* ================= ABOUT ================= */}
-        <section id="about" className="section surface-900">
-          <div className="container-x about-grid">
-            <div className="about-portrait" data-reveal aria-hidden="true">
-              <div className="about-portrait__ring" />
-              <div className="about-portrait__mono">AS</div>
-              <div className="about-portrait__glow" />
-            </div>
-            <div className="about-copy" data-reveal>
-              <p className="eyebrow">{ABOUT.eyebrow}</p>
-              <h2 className="h2 heading-accent">{ABOUT.title}</h2>
-              <div style={{ marginTop: "1.5rem", display: "grid", gap: "1.1rem" }}>
-                {ABOUT.paragraphs.map((p, i) => (
-                  <p key={i} className="lead" style={{ margin: 0 }}>
-                    {p}
-                  </p>
-                ))}
-              </div>
-              <p className="about-signature">{ABOUT.signature}</p>
-            </div>
-          </div>
-        </section>
-
-        {/* ================= WHY ================= */}
-        <section className="section surface-950">
-          <div className="ambient-grid" />
-          <div className="container-x" style={{ position: "relative" }}>
-            <div className="section-head section-head--center" data-reveal>
-              <p className="eyebrow">{WHY.eyebrow}</p>
-              <h2 className="h2 heading-accent heading-accent--center">{WHY.title}</h2>
-            </div>
-            <div className="why-grid">
-              {WHY.items.map((item, i) => (
-                <div
-                  key={item.title}
-                  className="why-item"
-                  data-reveal
-                  style={{ ["--reveal-delay" as string]: `${(i % 4) * 0.07}s` }}
-                >
-                  <ArrowIcon className="why-arrow" width={22} height={22} />
-                  <h3 className="h3" style={{ marginBottom: "0.5rem" }}>
-                    {item.title}
-                  </h3>
-                  <p style={{ margin: 0, color: "var(--mist-200)" }}>{item.body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* ================= CONTACT ================= */}
         <section id="contact" className="section surface-900">
           <div className="ambient-glow" style={{ opacity: 0.6 }} />
@@ -340,8 +315,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        
       </main>
 
       {/* ================= FOOTER ================= */}
@@ -349,9 +322,13 @@ export default function Home() {
         <hr className="seam" />
         <div className="container-x footer-grid">
           <div className="footer-brand">
-            <div className="brand-mark" style={{ fontSize: "1.6rem" }}>
-              AS<span style={{ opacity: 0.62, fontWeight: 500, margin: "0 0.14em" }}>Digital</span>
-            </div>
+            <Image
+              src="/images/as-logo.png"
+              alt="AS Digital"
+              width={2576}
+              height={570}
+              style={{ height: "2.6rem", width: "auto" }}
+            />
             <p style={{ color: "var(--mist-200)", maxWidth: "34ch", marginTop: "0.85rem" }}>
               {FOOTER.tagline}
             </p>

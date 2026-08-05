@@ -165,7 +165,7 @@ button { font: inherit; }
 }
 
 /* רווח מודולים מצומצם — פלואו מהיר יותר בין הסקשנים */
-.section { padding-block: clamp(2.75rem, 5.5vw, 4.75rem); position: relative; }
+.section { padding-block: clamp(1.6rem, 3.2vw, 2.75rem); position: relative; }
 
 .surface-950 { background: var(--ink-950); color: var(--white); }
 .surface-900 { background: var(--ink-900); color: var(--white); }
@@ -234,13 +234,16 @@ button { font: inherit; }
   transition: transform 0.35s var(--ease-brand), box-shadow 0.35s, background 0.35s, border-color 0.35s;
 }
 
+/* CTA ראשי — לבן זוהר */
 .glass-btn--primary {
-  --_bg: linear-gradient(135deg, rgba(191, 33, 78, 0.98), rgba(120, 18, 48, 0.95));
-  border-color: rgba(216, 87, 127, 0.9);
+  --_bg: linear-gradient(135deg, #ffffff, #eef1f6);
+  color: var(--ink-950);
+  border-color: rgba(255, 255, 255, 0.9);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.32),
-    0 0 0 1px rgba(216, 87, 127, 0.35),
-    0 10px 34px rgba(120, 18, 48, 0.55);
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 0 0 1px rgba(255, 255, 255, 0.45),
+    0 10px 34px rgba(10, 2, 6, 0.45),
+    0 0 26px rgba(255, 255, 255, 0.42);
 }
 
 .glass-btn__icon { width: 1.15em; height: 1.15em; flex: none; }
@@ -254,17 +257,24 @@ button { font: inherit; }
   transform: translateX(-120%);
   transition: transform 0.6s var(--ease-brand);
 }
+/* על כפתור לבן — נצנוץ כהה, אחרת הוא לא נראה */
+.glass-btn--primary::after {
+  background: linear-gradient(115deg, transparent 30%, rgba(18, 4, 9, 0.12) 50%, transparent 70%);
+}
 
 @media (hover: hover) {
   .glass-btn:hover { transform: translateY(-2px) scale(1.02); border-color: rgba(255, 255, 255, 0.4); }
-  .glass-btn--primary:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,0.32), 0 0 0 1px rgba(216,87,127,0.55), 0 16px 44px rgba(120,18,48,0.7); }
+  .glass-btn--primary:hover {
+    border-color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.95), 0 0 0 1px rgba(255,255,255,0.6), 0 16px 44px rgba(10,2,6,0.55), 0 0 40px rgba(255,255,255,0.6);
+  }
   .glass-btn:hover::after { transform: translateX(120%); }
 }
 .glass-btn:active { transform: scale(0.97); }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass-btn { background: var(--ink-800); }
-  .glass-btn--primary { background: var(--accent-600); }
+  .glass-btn--primary { background: #fff; color: var(--ink-950); }
 }
 
 /* וריאנט על משטח בהיר */
@@ -274,10 +284,10 @@ button { font: inherit; }
   color: var(--ink-fg);
 }
 
-/* כפתור WhatsApp ירוק (header + inline) */
+/* כפתור WhatsApp — זכוכית שקופה (header + inline) */
 .wa-btn {
-  --_bg: linear-gradient(135deg, #29d366, #1eae54);
-  border-color: rgba(255, 255, 255, 0.4);
+  --_bg: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 .wa-btn.glass-btn { color: #fff; }
 
@@ -498,11 +508,14 @@ button { font: inherit; }
   gap: 0.6rem;
   padding: 0.85rem 1.15rem 0.85rem 1.35rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, #29d366, #17a74a);
+  /* גוון כהה שקוף — נשאר קריא גם מעל האזור הכהה וגם מעל האזור הבהיר */
+  background: rgba(24, 8, 14, 0.55);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
   color: #fff;
   font-weight: 700;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 12px 34px rgba(23, 167, 74, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 12px 34px rgba(10, 2, 6, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.28);
   transform: translateY(140%);
   opacity: 0;
   transition: transform 0.5s var(--ease-brand), opacity 0.5s, box-shadow 0.35s;
@@ -511,14 +524,14 @@ button { font: inherit; }
 .wa-fab svg { width: 1.55rem; height: 1.55rem; flex: none; }
 .wa-fab .wa-fab__label { white-space: nowrap; }
 @media (hover: hover) {
-  .wa-fab:hover { box-shadow: 0 16px 44px rgba(23, 167, 74, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4); transform: translateY(-2px); }
+  .wa-fab:hover { box-shadow: 0 16px 44px rgba(10, 2, 6, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.32); transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.4); }
 }
 .wa-fab::before {
   content: "";
   position: absolute;
   inset: -3px;
   border-radius: inherit;
-  border: 2px solid rgba(41, 211, 102, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.35);
   animation: wa-pulse 2.4s var(--ease-brand) infinite;
   pointer-events: none;
 }
@@ -623,7 +636,7 @@ textarea.field { resize: vertical; min-height: 7rem; }
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.25rem;
-  margin-block-start: clamp(2.5rem, 5vw, 3.5rem);
+  margin-block-start: clamp(1.5rem, 3vw, 2.25rem);
 }
 @media (min-width: 620px) { .services-grid, .results-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 960px) { .services-grid { grid-template-columns: repeat(3, 1fr); } .results-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -634,7 +647,7 @@ textarea.field { resize: vertical; min-height: 7rem; }
 
 .process-grid {
   list-style: none;
-  margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  margin: clamp(1.5rem, 3vw, 2.25rem) 0 0;
   padding: 0;
   display: grid;
   grid-template-columns: 1fr;
@@ -669,7 +682,7 @@ textarea.field { resize: vertical; min-height: 7rem; }
    ============================================================================ */
 
 .case-card {
-  margin-block-start: clamp(2rem, 4vw, 3rem);
+  margin-block-start: clamp(1.25rem, 2.5vw, 2rem);
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
@@ -756,23 +769,17 @@ textarea.field { resize: vertical; min-height: 7rem; }
   overflow: hidden;
   isolation: isolate;
 }
-.about-portrait__mono {
-  font-family: var(--font-display); font-weight: 800; font-size: 6rem; letter-spacing: -0.04em;
-  background: linear-gradient(135deg, var(--accent-400), var(--azure-400));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  z-index: 2;
-}
-.about-portrait__ring {
-  position: absolute; inset: 12%; border-radius: 50%;
-  border: 1px dashed rgba(216, 87, 127, 0.4);
+.about-portrait__img {
+  object-fit: cover;
+  object-position: 50% 25%;
   z-index: 1;
 }
+/* וינייטה עדינה שמחברת את התמונה למסגרת */
 .about-portrait__glow {
-  position: absolute; inset: 0;
-  background: radial-gradient(60% 60% at 50% 100%, rgba(165, 29, 70, 0.35), transparent 65%),
-              radial-gradient(50% 50% at 20% 10%, rgba(61, 151, 224, 0.25), transparent 60%);
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(180deg, transparent 55%, rgba(18, 4, 9, 0.4)),
+              radial-gradient(80% 80% at 50% 40%, transparent 55%, rgba(18, 4, 9, 0.22));
 }
-.about-signature { margin-block-start: 1.75rem; font-family: var(--font-display); font-weight: 700; color: var(--accent-400); }
 @media (min-width: 900px) {
   .about-grid { grid-template-columns: 0.85fr 1.15fr; }
 }
@@ -785,7 +792,7 @@ textarea.field { resize: vertical; min-height: 7rem; }
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.25rem;
-  margin-block-start: clamp(2.5rem, 5vw, 3.5rem);
+  margin-block-start: clamp(1.5rem, 3vw, 2.25rem);
 }
 @media (min-width: 620px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1000px) { .why-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -824,7 +831,7 @@ textarea.field { resize: vertical; min-height: 7rem; }
   background: linear-gradient(135deg, rgba(165, 29, 70, 0.25), rgba(61, 151, 224, 0.15));
   border: 1px solid rgba(216, 87, 127, 0.3); color: var(--accent-400);
 }
-.contact-direct__icon.wa { background: linear-gradient(135deg, #29d366, #17a74a); border-color: rgba(255,255,255,0.3); color: #fff; }
+.contact-direct__icon.wa { background: rgba(255, 255, 255, 0.08); border-color: rgba(255,255,255,0.22); color: #fff; }
 .contact-direct__row strong { font-weight: 700; }
 
 /* ============================================================================
@@ -853,7 +860,7 @@ textarea.field { resize: vertical; min-height: 7rem; }
 /* ============================================================================
    CTA אחרי סקשן הווידאו
    ============================================================================ */
-.process-cta { padding-block: clamp(2rem, 4vw, 3rem); }
+.process-cta { padding-block: clamp(1.25rem, 2.5vw, 2rem); }
 .process-cta__inner {
   display: flex;
   flex-direction: column;
@@ -863,3 +870,40 @@ textarea.field { resize: vertical; min-height: 7rem; }
 }
 .process-cta__btn { padding: 16px 40px; font-size: 1.05rem; }
 .process-cta__note { margin: 0; }
+
+/* ============================================================================
+   LIGHT ZONE — מהמודול "אז איך עושים את זה?" והלאה הדף עובר לתמה בהירה.
+   כל הצבעים באתר מבוססי-משתנים, ולכן הגדרה מחדש של הטוקנים כאן מהפכת
+   את כל הסקשנים הנכללים לרקע בהיר וטקסט כהה — בלי לגעת בכל רכיב בנפרד.
+   ============================================================================ */
+.light-zone {
+  --ink-950: #f4edf0;   /* משטח בהיר ראשי (warm off-white) */
+  --ink-900: #ffffff;   /* משטח לבן */
+  --ink-850: #f8f2f5;
+  --ink-800: #ede1e7;
+  --white: #1a0c12;     /* מה שהיה טקסט לבן → הופך לכהה */
+  --fg: #1a0c12;
+  --mist-200: #4c3742;  /* טקסט משני כהה */
+  --mist-400: #806b76;  /* caption */
+  --accent-400: #a51d46;/* גוון accent קריא על רקע בהיר */
+  background: #f4edf0;
+  color: #1a0c12;
+}
+
+/* משטחים שהוגדרו עם שקיפות לבנה — מקבלים טיפול בהיר */
+.light-zone .process-step {
+  background: #fff;
+  border-color: rgba(20, 6, 11, 0.1);
+  box-shadow: 0 14px 34px -24px rgba(94, 15, 41, 0.4);
+}
+/* רקע הסקשן הבהיר מעט חמים */
+.light-zone .surface-900 { background: #f7f0f3; }
+
+/* דיוקן "נעים להכיר" נשאר כרטיס כהה — ניגוד יפה על הסקשן הבהיר */
+.light-zone .about-portrait {
+  background: linear-gradient(160deg, #2f0e1d, #120409);
+  border-color: rgba(216, 87, 127, 0.35);
+}
+
+/* זוהר הרקע הכהה מלכלך על בהיר — מסירים אותו באזור הבהיר */
+.light-zone .ambient-glow { display: none; }
