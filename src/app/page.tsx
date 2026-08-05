@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import Header from "@/components/Header";
 import HeroExperience from "@/components/hero/HeroExperience";
 import ProcessScroll from "@/components/ProcessScroll";
@@ -22,6 +23,7 @@ import {
   NAV,
   whatsappHref,
 } from "@/lib/content";
+import { LEGAL_DOCS } from "@/lib/legal";
 
 export default function Home() {
   return (
@@ -340,6 +342,15 @@ export default function Home() {
               <a key={item.href} href={item.href} className="footer-link">
                 {item.label}
               </a>
+            ))}
+          </nav>
+
+          <nav className="footer-col" aria-label="מידע משפטי">
+            <h3 className="footer-col__title">מידע משפטי</h3>
+            {LEGAL_DOCS.map((doc) => (
+              <Link key={doc.slug} href={doc.slug} className="footer-link">
+                {doc.navLabel}
+              </Link>
             ))}
           </nav>
 

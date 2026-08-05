@@ -1,0 +1,320 @@
+/* ============================================================================
+   תפריט נגישות — כפתור צף בפינה השמאלית התחתונה + מצבי התצוגה שהוא מפעיל.
+   הפינה הימנית שמורה לכפתור הוואטסאפ.
+   ============================================================================ */
+
+.a11y-root {
+  position: fixed;
+  /* מיקום פיזי במכוון — הדף RTL ותכונות לוגיות היו הופכות את הצדדים. */
+  left: clamp(1rem, 4vw, 1.75rem);
+  inset-block-end: clamp(1rem, 4vw, 1.75rem);
+  z-index: 60;
+  /* ה-root בגודל הכפתור בלבד; הפאנל ממוקם ביחס אליו. אם ה-root היה גדל
+     לרוחב הפאנל, הכפתור היה נסחף למרכז המסך ב-RTL. */
+  width: 3.4rem;
+  height: 3.4rem;
+}
+
+/* ---- הכפתור הצף ---- */
+
+.a11y-fab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(24, 8, 14, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: 0 12px 34px rgba(10, 2, 6, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition: transform 0.35s var(--ease-brand), box-shadow 0.35s, border-color 0.35s;
+}
+.a11y-fab svg { width: 1.85rem; height: 1.85rem; }
+@media (hover: hover) {
+  .a11y-fab:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 16px 44px rgba(10, 2, 6, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  }
+}
+.a11y-fab__badge {
+  position: absolute;
+  inset-block-start: -2px;
+  inset-inline-start: -2px;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding-inline: 0.25rem;
+  border-radius: 999px;
+  background: var(--accent-500);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+  text-align: center;
+}
+
+/* ---- הפאנל ---- */
+
+.a11y-panel {
+  position: absolute;
+  /* נפתח כלפי מעלה מהפינה השמאלית התחתונה. */
+  inset-block-end: calc(100% + 0.75rem);
+  left: 0;
+  width: min(20.5rem, calc(100vw - 2rem));
+  max-height: min(32rem, calc(100vh - 8rem));
+  overflow-y: auto;
+  padding: 1.15rem;
+  border-radius: 20px;
+  background: rgba(18, 6, 11, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  box-shadow: 0 26px 60px -18px rgba(0, 0, 0, 0.8);
+  color: #fff;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
+}
+.a11y-panel::-webkit-scrollbar { width: 8px; }
+.a11y-panel::-webkit-scrollbar-track { background: transparent; }
+.a11y-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+}
+.a11y-panel[hidden] { display: none; }
+
+.a11y-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: 1rem;
+}
+.a11y-panel__title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+}
+.a11y-close {
+  display: inline-flex;
+  padding: 0.35rem;
+  border-radius: 10px;
+  color: var(--mist-200);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.a11y-close svg { width: 1.25rem; height: 1.25rem; }
+.a11y-close:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+
+/* ---- גודל טקסט ---- */
+
+.a11y-group { margin-block-end: 1.1rem; }
+.a11y-group__label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--mist-200);
+  margin-block-end: 0.5rem;
+}
+.a11y-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; }
+.a11y-step {
+  padding: 0.55rem 0.25rem;
+  border-radius: 11px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: background 0.25s, border-color 0.25s;
+}
+.a11y-step:hover { background: rgba(255, 255, 255, 0.12); }
+.a11y-step[aria-pressed="true"] {
+  background: var(--accent-500);
+  border-color: var(--accent-400);
+}
+
+/* ---- מתגים ---- */
+
+.a11y-options { list-style: none; margin: 0 0 1.1rem; padding: 0; display: grid; gap: 0.4rem; }
+.a11y-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 13px;
+  font: inherit;
+  text-align: start;
+  color: #fff;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.25s, border-color 0.25s;
+}
+.a11y-option:hover { background: rgba(255, 255, 255, 0.1); }
+.a11y-option__text { display: grid; gap: 0.15rem; }
+.a11y-option__label { font-size: 0.95rem; font-weight: 600; }
+.a11y-option__hint { font-size: 0.78rem; line-height: 1.35; color: var(--mist-400); }
+
+.a11y-switch {
+  flex: none;
+  position: relative;
+  width: 2.4rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  transition: background 0.25s;
+}
+.a11y-switch::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0.19rem;
+  inset-inline-start: 0.19rem;
+  width: 0.97rem;
+  height: 0.97rem;
+  border-radius: 50%;
+  background: #fff;
+  transition: translate 0.25s var(--ease-brand);
+}
+.a11y-option[aria-pressed="true"] .a11y-switch { background: var(--accent-500); }
+/* RTL: המתג נע שמאלה כשהוא דלוק. */
+.a11y-option[aria-pressed="true"] .a11y-switch::after { translate: -1.05rem 0; }
+
+/* ---- תחתית הפאנל ---- */
+
+.a11y-reset {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem;
+  border-radius: 13px;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  transition: background 0.25s;
+}
+.a11y-reset svg { width: 1.05rem; height: 1.05rem; }
+.a11y-reset:hover:not(:disabled) { background: rgba(255, 255, 255, 0.14); }
+.a11y-reset:disabled { opacity: 0.45; cursor: default; }
+
+.a11y-statement {
+  display: block;
+  margin-block-start: 0.85rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--azure-300);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ============================================================================
+   מצבי התצוגה שהתפריט מפעיל (מוחלים כמחלקות על <html>)
+   ============================================================================ */
+
+/* ---- גודל טקסט ---- */
+html[data-a11y-font="1"] { font-size: 112.5%; }
+html[data-a11y-font="2"] { font-size: 125%; }
+html[data-a11y-font="3"] { font-size: 140%; }
+
+/* ---- גווני אפור ----
+   מיושם כשכבת backdrop-filter ולא כ-filter על <html>: filter על אב יוצר
+   containing block חדש ושובר כל position:fixed בדף (הדר, הכפתורים הצפים). */
+html.a11y-gray::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  backdrop-filter: grayscale(1);
+  -webkit-backdrop-filter: grayscale(1);
+}
+
+/* ---- הדגשת קישורים ---- */
+html.a11y-links :where(a, button) {
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+html.a11y-links :where(a) {
+  outline: 2px dashed currentColor;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- גופן קריא ---- */
+html.a11y-readable,
+html.a11y-readable :where(*) {
+  font-family: Arial, "Helvetica Neue", system-ui, sans-serif !important;
+  letter-spacing: normal !important;
+}
+
+/* ---- עצירת אנימציות ---- */
+html.a11y-no-motion { scroll-behavior: auto !important; }
+html.a11y-no-motion *,
+html.a11y-no-motion *::before,
+html.a11y-no-motion *::after {
+  animation: none !important;
+  transition: none !important;
+}
+html.a11y-no-motion [data-reveal] { opacity: 1 !important; transform: none !important; }
+html.a11y-no-motion .rise { opacity: 1 !important; }
+/* הקנבסים בהירו דקורטיביים בלבד (aria-hidden) — הסתרתם היא הדרך היחידה
+   לעצור באמת את התנועה שלהם, כי CSS לא עוצר לולאת רינדור של WebGL. */
+html.a11y-no-motion canvas { visibility: hidden; }
+
+/* ---- ניגודיות גבוהה ---- */
+html.a11y-contrast body { background: #000 !important; }
+html.a11y-contrast :where(section, header, footer, main, div, article, nav, aside, form, ul, li) {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+html.a11y-contrast :where(h1, h2, h3, h4, h5, h6, p, span, li, strong, em, label, td, th, figcaption, summary) {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+html.a11y-contrast :where(a) {
+  color: #ffe14d !important;
+  -webkit-text-fill-color: #ffe14d !important;
+  text-decoration: underline !important;
+}
+html.a11y-contrast :where(button, .glass-btn, .wa-btn, .wa-fab, .a11y-fab) {
+  background: #000 !important;
+  background-image: none !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  border: 2px solid #fff !important;
+  box-shadow: none !important;
+}
+html.a11y-contrast :where(input, textarea, select) {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+html.a11y-contrast :where(input, textarea)::placeholder { color: #c9c9c9 !important; }
+/* טקסט עם גרדיאנט (background-clip: text) — מאלצים צבע מלא. */
+html.a11y-contrast :where(.stat-value, .heading-accent, .a11y-panel__title) {
+  background: none !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+/* אלמנטים דקורטיביים שרק מוסיפים רעש במצב ניגודיות. */
+html.a11y-contrast :where(.ambient-glow, .about-portrait__glow, canvas, video) {
+  display: none !important;
+}
+html.a11y-contrast .a11y-panel { background: #000 !important; border: 2px solid #fff !important; }
+html.a11y-contrast :where(.a11y-step, .a11y-option, .a11y-reset)[aria-pressed="true"] {
+  outline: 3px solid #ffe14d !important;
+}

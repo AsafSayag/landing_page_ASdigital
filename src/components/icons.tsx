@@ -111,6 +111,25 @@ export function BoltIcon(props: IconProps) {
   );
 }
 
+/** סמל הנגישות הבינלאומי (Universal Access). */
+export function AccessibilityIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <circle cx="12" cy="4.2" r="2" />
+      <path d="M20 7.4a1 1 0 0 0-1.24-.68L15.1 7.8a10.6 10.6 0 0 1-6.2 0L5.24 6.72a1 1 0 1 0-.56 1.92l3.57 1.05v2.5l-1.6 6.55a1 1 0 0 0 1.94.48l1.66-6.8h1.5l1.66 6.8a1 1 0 1 0 1.94-.48l-1.6-6.55v-2.5l3.57-1.05A1 1 0 0 0 20 7.4z" />
+    </svg>
+  );
+}
+
+export function ResetIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <path d="M3 12a9 9 0 1 0 2.64-6.36L3 8.2" />
+      <path d="M3 3.6v4.8h4.8" />
+    </svg>
+  );
+}
+
 export const SERVICE_ICONS: Record<string, (p: IconProps) => React.ReactElement> = {
   web: WebIcon,
   seo: SeoIcon,

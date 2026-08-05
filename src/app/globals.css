@@ -500,7 +500,9 @@ button { font: inherit; }
 
 .wa-fab {
   position: fixed;
-  inset-inline-end: clamp(1rem, 4vw, 1.75rem);
+  /* מיקום פיזי במכוון: הדף RTL, ולכן inset-inline-end היה מציב את הכפתור
+     בשמאל. הפינה השמאלית שמורה לתפריט הנגישות. */
+  right: clamp(1rem, 4vw, 1.75rem);
   inset-block-end: clamp(1rem, 4vw, 1.75rem);
   z-index: 55;
   display: inline-flex;
@@ -852,7 +854,9 @@ textarea.field { resize: vertical; min-height: 7rem; }
   gap: 2.5rem;
   padding-block-start: clamp(3rem, 6vw, 4.5rem);
 }
-@media (min-width: 720px) { .footer-grid { grid-template-columns: 1.5fr 1fr 1.2fr; } }
+/* ארבע עמודות; בטווח הביניים 2×2 כדי שהעמודה הרביעית לא תישאר יתומה. */
+@media (min-width: 720px) { .footer-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .footer-grid { grid-template-columns: 1.4fr 0.9fr 1fr 1.1fr; } }
 .footer-col { display: flex; flex-direction: column; gap: 0.7rem; }
 .footer-col__title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; margin: 0 0 0.4rem; color: #fff; }
 .footer-bottom { padding-block: 2.5rem 0; text-align: center; border-block-start: 1px solid rgba(255, 255, 255, 0.06); margin-block-start: 2.5rem; }
