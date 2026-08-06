@@ -171,22 +171,22 @@ button { font: inherit; }
 .surface-900 { background: var(--ink-900); color: var(--white); }
 .surface-ice { background: var(--ice-050); color: var(--ink-fg); }
 
-.section-head { max-width: 46rem; }
-.section-head--center { margin-inline: auto; text-align: center; }
+/* כל כותרות המקטעים ממורכזות */
+.section-head { max-width: 46rem; margin-inline: auto; text-align: center; }
 
 /* קו accent מתחת לכותרת */
 .heading-accent { position: relative; display: inline-block; padding-block-end: 0.85rem; }
 .heading-accent::after {
   content: "";
   position: absolute;
-  inset-inline-start: 0;
+  inset-inline-start: 50%;
   inset-block-end: 0;
+  transform: translateX(50%);
   width: 3.5rem;
   height: 3px;
   border-radius: 3px;
-  background: linear-gradient(to left, var(--accent-500), color-mix(in srgb, var(--accent-500) 0%, transparent));
+  background: linear-gradient(to left, color-mix(in srgb, var(--accent-500) 0%, transparent), var(--accent-500), color-mix(in srgb, var(--accent-500) 0%, transparent));
 }
-.heading-accent--center::after { inset-inline-start: 50%; transform: translateX(50%); }
 
 /* ============================================================================
    זכוכית נוזלית

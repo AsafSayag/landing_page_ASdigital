@@ -188,8 +188,10 @@ export default function Home() {
               <div className="about-portrait__glow" />
             </div>
             <div className="about-copy" data-reveal>
-              <p className="eyebrow">{ABOUT.eyebrow}</p>
-              <h2 className="h2 heading-accent">{ABOUT.title}</h2>
+              <div className="section-head">
+                <p className="eyebrow">{ABOUT.eyebrow}</p>
+                <h2 className="h2 heading-accent">{ABOUT.title}</h2>
+              </div>
               <div style={{ marginTop: "1.5rem", display: "grid", gap: "1.1rem" }}>
                 {ABOUT.paragraphs.map((p, i) => (
                   <p key={i} className="lead" style={{ margin: 0 }}>
@@ -235,9 +237,9 @@ export default function Home() {
         {/* ================= PROCESS ================= */}
         <section id="process" className="section surface-900">
           <div className="container-x">
-            <div className="section-head section-head--center" data-reveal>
+            <div className="section-head" data-reveal>
               <p className="eyebrow">{PROCESS.eyebrow}</p>
-              <h2 className="h2 heading-accent heading-accent--center">{PROCESS.title}</h2>
+              <h2 className="h2 heading-accent">{PROCESS.title}</h2>
               <p className="lead" style={{ marginTop: "1.25rem" }}>
                 {PROCESS.intro}
               </p>
@@ -250,10 +252,12 @@ export default function Home() {
           <div className="ambient-glow" style={{ opacity: 0.6 }} />
           <div className="container-x contact-grid" style={{ position: "relative" }}>
             <div className="contact-copy" data-reveal>
-              <h2 className="h2 heading-accent">{CONTACT.title}</h2>
-              <p className="lead" style={{ marginTop: "1.25rem" }}>
-                {CONTACT.intro}
-              </p>
+              <div className="section-head">
+                <h2 className="h2 heading-accent">{CONTACT.title}</h2>
+                <p className="lead" style={{ marginTop: "1.25rem" }}>
+                  {CONTACT.intro}
+                </p>
+              </div>
 
               <div className="contact-direct">
                 <a

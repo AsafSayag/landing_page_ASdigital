@@ -24,9 +24,9 @@ export default function PainPoints() {
   return (
     <section className="pain section surface-900" aria-labelledby="pain-title">
       <div className="container-x">
-        <div className="section-head section-head--center" data-reveal>
+        <div className="section-head" data-reveal>
           <p className="eyebrow">{PAIN_POINTS.eyebrow}</p>
-          <h2 id="pain-title" className="h2 heading-accent heading-accent--center">
+          <h2 id="pain-title" className="h2 heading-accent">
             {PAIN_POINTS.title}
           </h2>
           <p className="lead" style={{ marginTop: "1.1rem" }}>
