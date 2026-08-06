@@ -33,6 +33,9 @@ export default function Header() {
             width={2576}
             height={570}
             priority
+            /* בלי sizes, next/image מזמין את הווריאנט של 3840px עבור לוגו
+               שמוצג ב-174px — וזה גם מה שנטען ב-preload כ-LCP. */
+            sizes="174px"
             style={{ height: "clamp(1.9rem, 3.4vw, 2.4rem)", width: "auto" }}
           />
         </a>

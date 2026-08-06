@@ -302,6 +302,7 @@ export default function Home() {
               alt="AS Digital"
               width={2576}
               height={570}
+              sizes="188px"
               style={{ height: "2.6rem", width: "auto" }}
             />
             <p style={{ color: "var(--mist-200)", maxWidth: "34ch", marginTop: "0.85rem" }}>
