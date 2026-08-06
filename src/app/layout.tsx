@@ -96,6 +96,8 @@ const jsonLd = {
       telephone: "+972-54-766-4809",
       email: BUSINESS.email,
       image: `${SITE_URL}/video/process-poster.jpg`,
+      /* גוגל משתמש ב-logo לכרטיס הידע ולתוצאות המותג */
+      logo: `${SITE_URL}/images/as-logo.png`,
       priceRange: "$$",
       areaServed: { "@type": "Country", name: "IL" },
       address: {
@@ -135,6 +137,7 @@ const jsonLd = {
       jobTitle: BUSINESS.role,
       worksFor: { "@id": `${SITE_URL}/#business` },
       url: SITE_URL,
+      image: `${SITE_URL}/images/asaf-portrait.webp`,
     },
     {
       "@type": "WebSite",

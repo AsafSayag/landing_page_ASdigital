@@ -225,12 +225,6 @@
   .dtx-h1__a, .dtx-h1__b { display: block; }
 }
 
-.dtx-sub {
-  margin: 0 auto; max-width: 34rem;
-  color: rgba(232, 244, 251, 0.82); font-weight: 400;
-  font-size: clamp(1rem, 1.7vw, 1.2rem); line-height: 1.55;
-}
-
 /* --- מצב מכווץ: הכותרת הופכת לתג זכוכית בצבעי ההירו --- */
 .dtx-headline--compact .dtx-h1__l1 { display: none; }
 .dtx-headline--compact .dtx-h1__l2 {
@@ -261,22 +255,26 @@
 .dtx-headline--compact .dtx-h1__a,
 .dtx-headline--compact .dtx-h1__b { display: inline; }
 
-/* שורת ההד — מעט גדולה וחמה יותר מהתג הרגיל, ונכנסת בעדינות
-   בכל פעם שהמשתמש בוחר תשובה אחרת. */
 .dtx-h1__echo {
-  font-size: clamp(0.95rem, 1.75vw, 1.15rem);
-  color: #fff;
   animation: dtx-echo-in 0.55s var(--ease-brand) both;
-  /* התג לא נמתח על כל רוחב המסך: בדסקטופ שורה אחת, ובמובייל הוא
-     נשבר לשתי שורות מאוזנות במקום לשורה ארוכה ודקה. */
-  max-width: min(30rem, 86vw);
-  text-wrap: balance;
 }
 
-/* ההכהיה המצטברת: כל תשובה מוסיפה "דיו" מעל הזכוכית, עד רקע אטום
-   בשלב הטופס. --echo-depth (0→1) מגיע מהקומפוננטה לפי השלב.
-   הסלקטור כפול-מחלקה כדי לגבור על .dtx-headline--compact .dtx-h1__l2. */
+/* שורת ההד — גדולה ובולטת יותר מהתג הרגיל, ומתכהה עם כל תשובה.
+   הסלקטור כפול-מחלקה בכוונה: .dtx-headline--compact .dtx-h1__l2 חזק
+   יותר מ-.dtx-h1__echo לבדו, ובלעדיו הגודל, המשקל והצבע כאן לא היו
+   תופסים בכלל. */
 .dtx-headline--compact .dtx-h1__l2.dtx-h1__echo {
+  /* רצפת ה-clamp היא מה שקובע במובייל (2vw קטן ממנה שם), ולכן היא
+     הועלתה הכי הרבה — שם התג היה קטן מדי. */
+  font-size: clamp(1.2rem, 2vw, 1.35rem);
+  font-weight: 700;
+  color: #fff;
+  /* ריפוד גדול יותר, שהטקסט המוגדל לא ייראה דחוס בתוך התג */
+  padding: 0.62rem 1.4rem;
+  /* התג לא נמתח על כל רוחב המסך; במובייל הוא נשבר לשתי שורות
+     מאוזנות במקום לשורה אחת ארוכה ודקה. */
+  max-width: min(32rem, 90vw);
+  text-wrap: balance;
   --echo-ink: calc(var(--echo-depth, 0) * 0.94);
   background:
     linear-gradient(rgba(3, 9, 16, var(--echo-ink)), rgba(3, 9, 16, var(--echo-ink))),
@@ -301,7 +299,6 @@ html.a11y-no-motion .dtx-h1__echo { animation: none; }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .dtx-headline--compact .dtx-h1__l2 { background: rgba(10, 26, 40, 0.85); }
 }
-.dtx-headline--compact + .dtx-sub { display: none; }
 
 /* ---------- שלבים ---------- */
 .dtx-step { width: 100%; max-width: 44rem; display: flex; justify-content: center; margin-block-start: clamp(0.5rem, 2vh, 1.25rem); }

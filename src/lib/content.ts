@@ -214,7 +214,7 @@ export const PROCESS_CTA = {
 export const PAIN_POINTS = {
   eyebrow: "מוכר לך?",
   title: "אם אתה מרגיש אחד מהדברים הבאים",
-  intro: "לחץ על מה שהכי מדבר אליך — ואגיד לך מאיפה מתחילים.",
+  intro: "תלחץ על מה שהכי מדבר אליך.",
   items: [
     {
       id: "more-leads",

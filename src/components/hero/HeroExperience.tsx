@@ -206,10 +206,6 @@ export default function HeroExperience() {
             </h1>
           </div>
 
-          <p className="dtx-sub dtx-rise" style={{ ["--d" as string]: "0.6s" }}>
-            {INTRO.sub}
-          </p>
-
           {/* ---------- שלבים ---------- */}
           <div className="dtx-step">
             <div key={phase} className="dtx-step__inner">
