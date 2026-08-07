@@ -233,6 +233,8 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ============ איך זה לעבוד איתי — גם בתמה בהירה, כמו "נעים להכיר" ============ */}
+        <div className="light-zone on-light">
         {/* ================= PROCESS ================= */}
         <section id="process" className="section surface-900">
           <div className="container-x">
@@ -245,6 +247,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </div>{/* light-zone end */}
 
         {/* ================= CONTACT ================= */}
         <section id="contact" className="section surface-900">
