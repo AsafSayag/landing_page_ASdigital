@@ -95,11 +95,9 @@ export default function Home() {
             <div className="case-card" data-reveal>
               <div className="case-body">
                 <p className="eyebrow">{CASE.eyebrow}</p>
-                <h3 className="case-title ltr">{CASE.title}</h3>
                 <p className="caption" style={{ margin: "0.25rem 0 1rem" }}>
                   {CASE.category}
                 </p>
-                <p style={{ color: "var(--mist-200)", marginTop: 0 }}>{CASE.body}</p>
                 <ul className="case-bullets">
                   {CASE.bullets.map((b) => (
                     <li key={b}>
@@ -120,6 +118,7 @@ export default function Home() {
                 </a>
               </div>
               <div className="case-visual">
+                <h3 className="case-title ltr">{CASE.title}</h3>
                 <a
                   className="case-browser"
                   href={CASE.href}

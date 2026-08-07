@@ -44,7 +44,7 @@ export default function ContactForm() {
   )}&body=${encodeURIComponent(buildMessage())}`;
 
   return (
-    <form onSubmit={onSubmit} className="glass cf">
+    <form id="contact-form" onSubmit={onSubmit} className="glass cf">
       {pain && (
         <div className="pain-note" role="status">
           <span className="pain-note__label">מה שסימנת</span>
