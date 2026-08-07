@@ -404,7 +404,10 @@ html.a11y-no-motion .dtx-h1__echo { animation: none; }
 
 /* ---------- רמז גלילה ---------- */
 .dtx-scroll {
-  margin-block-start: clamp(1.5rem, 4vh, 2.75rem);
+  position: absolute;
+  left: 50%;
+  bottom: 1.1rem;
+  transform: translateX(-50%);
   display: inline-flex; flex-direction: column; align-items: center; gap: 0.5rem;
   color: rgba(223, 240, 251, 0.4); font-size: 0.76rem; font-weight: 500; letter-spacing: 0.08em;
   pointer-events: auto;

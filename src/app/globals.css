@@ -660,7 +660,8 @@ textarea.field { resize: vertical; min-height: 7rem; }
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 30px 70px -40px rgba(0, 0, 0, 0.9);
   overflow: hidden;
 }
-.case-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.75rem, 3.5vw, 2.4rem); margin: 0.25rem 0 0; }
+.case-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.75rem, 3.5vw, 2.4rem); margin: 0 0 0.75rem; text-align: center; }
+.case-body .eyebrow { text-align: center; }
 .case-bullets { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: 0.6rem; }
 .case-bullets li { display: flex; align-items: center; gap: 0.65rem; color: var(--mist-200); }
 .case-check {
@@ -673,7 +674,7 @@ textarea.field { resize: vertical; min-height: 7rem; }
   width: 0.32rem; height: 0.55rem; border: 2px solid #fff; border-top: 0; border-inline-start: 0;
   transform: translateY(-1px) rotate(45deg);
 }
-.case-visual { display: flex; justify-content: center; }
+.case-visual { display: flex; flex-direction: column; align-items: center; position: relative; }
 .case-browser {
   width: 100%;
   max-width: 26rem;
@@ -715,6 +716,14 @@ textarea.field { resize: vertical; min-height: 7rem; }
 
 @media (min-width: 900px) {
   .case-card { grid-template-columns: 1.1fr 0.9fr; }
+  .case-body .eyebrow { text-align: start; }
+  .case-visual { align-items: flex-start; }
+  .case-title {
+    align-self: flex-end;
+    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    margin: 0 0 0.6rem;
+    text-align: left;
+  }
 }
 
 /* ============================================================================

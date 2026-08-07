@@ -18,7 +18,9 @@ export default function PainPoints() {
         detail: { label: item.label, answer: item.answer },
       })
     );
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document
+      .getElementById("contact-form")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
