@@ -36,6 +36,11 @@ export default function ContactForm() {
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, phone, message }),
+    }).catch(() => {});
     window.open(whatsappHref(buildMessage()), "_blank", "noopener,noreferrer");
   }
 
