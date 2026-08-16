@@ -3,6 +3,7 @@ import { Frank_Ruhl_Libre, IBM_Plex_Sans_Hebrew } from "next/font/google";
 import { BUSINESS } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
 import AccessibilityWidget, { A11Y_BOOT_SCRIPT } from "@/components/AccessibilityWidget";
+import LeadTracker from "@/components/LeadTracker";
 import "./globals.css";
 
 /* כותרות: Frank Ruhl Libre — סריף עברי אלגנטי שמשדר אמינות ויוקרה.
@@ -176,6 +177,7 @@ export default function RootLayout({
           דלגו לתוכן הראשי
         </a>
         {children}
+        <LeadTracker />
         <AccessibilityWidget />
         <script
           type="application/ld+json"

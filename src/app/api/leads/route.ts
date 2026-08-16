@@ -6,12 +6,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "missing webapp url" }, { status: 500 });
   }
 
-  const { name, phone, message } = await request.json();
+  const { name, phone, message, source } = await request.json();
 
   const sheetResponse = await fetch(webAppUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, phone, message }),
+    body: JSON.stringify({ name, phone, message, source }),
   });
 
   if (!sheetResponse.ok) {

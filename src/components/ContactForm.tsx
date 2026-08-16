@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BUSINESS, CONTACT, whatsappHref } from "@/lib/content";
+import { saveLead, updateLeadDraft } from "@/lib/save-lead";
 import { WhatsAppIcon, PhoneIcon } from "./icons";
 import type { PainDetail } from "./PainPoints";
 import "./contact-form.css";
@@ -24,6 +25,12 @@ export default function ContactForm() {
     return () => window.removeEventListener("as:pain", onPain);
   }, []);
 
+  /* מזינים את הטיוטה תוך כדי הקלדה — כדי שגם מי שימלא כאן ואז ילחץ על
+     כפתור וואטסאפ אחר בעמוד, במקום על "שליחה", עדיין ייכנס לגיליון. */
+  useEffect(() => {
+    updateLeadDraft({ name, phone, message });
+  }, [name, phone, message]);
+
   function buildMessage() {
     const lines = [
       "היי אסף, הגעתי מהאתר של AS digital 👋",
@@ -36,11 +43,7 @@ export default function ContactForm() {
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    fetch("/api/leads", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, phone, message }),
-    }).catch(() => {});
+    saveLead({ name, phone, message }, "טופס יצירת קשר");
     window.open(whatsappHref(buildMessage()), "_blank", "noopener,noreferrer");
   }
 
