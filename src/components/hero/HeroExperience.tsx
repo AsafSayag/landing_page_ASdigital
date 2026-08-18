@@ -19,6 +19,7 @@ import {
   SYSTEM_PROGRESS,
 } from "@/lib/hero-diagnosis";
 import { whatsappHref } from "@/lib/content";
+import { saveLead, updateLeadDraft } from "@/lib/save-lead";
 import { ArrowIcon } from "@/components/icons";
 import CloudEmblem from "./CloudEmblem";
 import "./hero.css";
@@ -92,24 +93,41 @@ export default function HeroExperience() {
   const goal = answers.q2id ? GOAL_LINE[answers.q2id] : "";
   const urgency = answers.q4id ? URGENCY_LINE[answers.q4id] : "";
 
+  /* סיכום האבחון — נכנס גם להודעת הוואטסאפ וגם לעמודת ההודעה בגיליון,
+     כדי שהליד יישמר עם ההקשר ולא רק עם שם וטלפון. */
+  const summary = useMemo(
+    () =>
+      [
+        answers.q1 && `מצב נוכחי: ${answers.q1}`,
+        answers.q1src && `מאיפה מגיעים לקוחות היום: ${answers.q1src}`,
+        siteUrl && `קישור: ${siteUrl}`,
+        answers.q2 && `מטרה: ${answers.q2}`,
+        answers.q3 && `תחום: ${answers.q3}`,
+        answers.q4 && `לוח זמנים: ${answers.q4}`,
+      ].filter(Boolean) as string[],
+    [answers, siteUrl]
+  );
+
   const waHref = useMemo(() => {
     const lines = [
       "היי אסף, סיימתי את האבחון באתר של AS digital 👋",
-      answers.q1 && `מצב נוכחי: ${answers.q1}`,
-      answers.q1src && `מאיפה מגיעים לקוחות היום: ${answers.q1src}`,
-      siteUrl && `קישור: ${siteUrl}`,
-      answers.q2 && `מטרה: ${answers.q2}`,
-      answers.q3 && `תחום: ${answers.q3}`,
-      answers.q4 && `לוח זמנים: ${answers.q4}`,
+      ...summary,
       name && `שם: ${name}`,
       phone && `טלפון: ${phone}`,
       "אשמח לשיחת אפיון.",
     ].filter(Boolean) as string[];
     return whatsappHref(lines.join("\n"));
-  }, [answers, siteUrl, name, phone]);
+  }, [summary, name, phone]);
+
+  /* גם אם ינטוש את האבחון באמצע וילחץ על כפתור וואטסאפ אחר — התשובות
+     והפרטים שכבר מילא ילכו איתו לגיליון. */
+  useEffect(() => {
+    updateLeadDraft({ name, phone, message: summary.join(" | ") });
+  }, [name, phone, summary]);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    saveLead({ name, phone, message: summary.join(" | ") }, "אבחון דיגיטלי");
     window.open(waHref, "_blank", "noopener,noreferrer");
   };
 
