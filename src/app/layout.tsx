@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Frank_Ruhl_Libre, IBM_Plex_Sans_Hebrew } from "next/font/google";
 import { BUSINESS } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
+import { GOOGLE_ADS_ID } from "@/lib/ads-conversion";
 import AccessibilityWidget, { A11Y_BOOT_SCRIPT } from "@/components/AccessibilityWidget";
 import LeadTracker from "@/components/LeadTracker";
 import "./globals.css";
@@ -23,9 +24,6 @@ const body = IBM_Plex_Sans_Hebrew({
   display: "swap",
   preload: true,
 });
-
-/* Google Ads — מזהה תגית להמרות (gtag.js) */
-const GOOGLE_ADS_ID = "AW-18391999533";
 
 const TITLE = "AS digital — בניית אתרים, קידום אורגני ושיווק ממומן | אסף סאייג";
 const DESCRIPTION =
