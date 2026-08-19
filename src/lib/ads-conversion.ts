@@ -1,6 +1,7 @@
 /* Google Ads — מזהה תגית ופעולת ההמרה "ליד".
    התגית עצמה נטענת פעם אחת ב-layout.tsx; כאן רק שולחים את האירוע. */
 export const GOOGLE_ADS_ID = "AW-18391999533";
+export const GOOGLE_ANALYTICS_ID = "G-Q2DLPDGYZ7";
 const CONVERSION_SEND_TO = `${GOOGLE_ADS_ID}/MeZ8CLXchOQcEK3I_sFE`;
 
 declare global {
