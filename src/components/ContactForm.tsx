@@ -125,7 +125,9 @@ export default function ContactForm() {
         </a>
       </div>
 
-      <p className="caption cf__note">פרטייך נשלחים ישירות אליי — ללא צד שלישי, ללא ספאם.</p>
+      <p className="caption cf__note">
+        הפרטים נשמרים לצורך יצירת קשר בלבד ולא מועברים לגורמי שיווק חיצוניים.
+      </p>
     </form>
   );
 }
