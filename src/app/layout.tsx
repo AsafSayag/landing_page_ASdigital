@@ -3,7 +3,7 @@ import Script from "next/script";
 import { Frank_Ruhl_Libre, IBM_Plex_Sans_Hebrew } from "next/font/google";
 import { BUSINESS } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
-import { GOOGLE_ADS_ID } from "@/lib/ads-conversion";
+import { GOOGLE_ADS_ID, GOOGLE_ANALYTICS_ID } from "@/lib/ads-conversion";
 import AccessibilityWidget, { A11Y_BOOT_SCRIPT } from "@/components/AccessibilityWidget";
 import LeadTracker from "@/components/LeadTracker";
 import "./globals.css";
@@ -169,7 +169,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Google tag (gtag.js) — מעקב המרות של Google Ads.
+        {/* Google tag (gtag.js) — Google Ads ו-Google Analytics.
             next/script טוען אחרי ההידרציה כדי לא לחסום את הצביעה הראשונה. */}
         <Script
           id="gtag-src"
@@ -181,7 +181,8 @@ export default function RootLayout({
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 
-gtag('config', '${GOOGLE_ADS_ID}');`}
+gtag('config', '${GOOGLE_ADS_ID}');
+gtag('config', '${GOOGLE_ANALYTICS_ID}');`}
         </Script>
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {/* מחיל הגדרות נגישות שמורות לפני הצביעה הראשונה — בלי זה משתמש
