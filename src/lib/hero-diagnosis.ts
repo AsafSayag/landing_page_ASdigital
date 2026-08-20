@@ -140,7 +140,6 @@ export const GOAL_LINE: Record<string, string> = {
 export const URGENCY_LINE: Record<string, string> = {
   now: "ומכיוון שזה דחוף — נתחיל מהצעד שנותן את ההחזר המהיר ביותר.",
   month: "יש לנו זמן לבנות את זה נכון מהיסוד.",
-  exploring: "ניקח את זה בקצב שלך, בלי לחץ.",
 };
 
 export const DIAG_FORM = {
