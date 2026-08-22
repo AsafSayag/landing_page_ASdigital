@@ -4,29 +4,29 @@ import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   INTRO,
-  Q1,
-  Q1_LINK,
-  Q1_SOURCE,
-  Q2,
-  Q3,
-  Q4,
+  Q_STATE,
+  Q_LINK,
+  Q_SOURCE,
+  Q_TIMING,
   INSIGHTS,
   ECHO_LINE,
   ECHO_DEPTH,
-  GOAL_LINE,
   URGENCY_LINE,
+  HERO_CTA,
+  HERO_PROOF,
+  DIAG_INTRO,
   DIAG_FORM,
   SYSTEM_PROGRESS,
 } from "@/lib/hero-diagnosis";
 import { whatsappHref } from "@/lib/content";
 import { saveLead, updateLeadDraft } from "@/lib/save-lead";
-import { ArrowIcon } from "@/components/icons";
-import CloudEmblem from "./CloudEmblem";
+import { ArrowIcon, WhatsAppIcon } from "@/components/icons";
+import SentModal from "@/components/SentModal";
 import "./hero.css";
 
 const TwinCanvas = dynamic(() => import("./TwinCanvas"), { ssr: false });
 
-type Phase = "q1" | "q1link" | "q1source" | "q2" | "q3" | "q4" | "form";
+type Phase = "state" | "link" | "source" | "timing" | "form";
 
 
 function useWebGL() {
@@ -43,18 +43,16 @@ function useWebGL() {
 }
 
 type Answers = {
-  q1?: string; q1id?: string;
-  q1src?: string; q1srcid?: string;
-  q2?: string; q2id?: string;
-  q3?: string; q3id?: string;
-  q4?: string; q4id?: string;
+  state?: string; stateId?: string;      // נקודת הפתיחה
+  src?: string; srcId?: string;          // מקור הלקוחות (למי שאין אתר)
+  timing?: string; timingId?: string;    // לוח זמנים
 };
 
 export default function HeroExperience() {
   const [mounted, setMounted] = useState(false);
   const webgl = useWebGL();
 
-  const [phase, setPhase] = useState<Phase>("q1");
+  const [phase, setPhase] = useState<Phase>("state");
   const [locked, setLocked] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Answers>({});
@@ -63,8 +61,19 @@ export default function HeroExperience() {
   const [phone, setPhone] = useState("");
   /* הקלפים מונפשים עם עיכוב פתיחה רק בטעינה הראשונה */
   const [firstPaint, setFirstPaint] = useState(true);
+  /* אישור השליחה — מחליף את המעבר לוואטסאפ */
+  const [sentOpen, setSentOpen] = useState(false);
 
   useEffect(() => setMounted(true), []);
+
+  /* אחרי כל מעבר שלב המסך חוזר לראש העמוד: השאלה הבאה נכנסת שם, ובלי
+     זה משתמש שגלל למטה נשאר מול תוכן שהתחלף מתחתיו. */
+  const scrollToTop = useCallback(() => {
+    const reduce =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      document.documentElement.classList.contains("a11y-no-motion");
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+  }, []);
 
   /* בחירת תשובה: מצב פעיל → זרימת חלקיקים → השאלה הבאה נכנסת ברוגע */
   const advance = (next: Phase, patch: Answers, id: string) => {
@@ -72,6 +81,7 @@ export default function HeroExperience() {
     setSelected(id);
     setLocked(true);
     setFirstPaint(false);
+    scrollToTop();
     // האנרגיה נספגת סביב הענן, ורק אז השאלה הבאה. את התשובות שומרים כאן
     // ולא בלחיצה — כך הכותרת המהדהדת מתחלפת *יחד* עם השאלה, לא לפניה.
     setTimeout(() => {
@@ -82,42 +92,28 @@ export default function HeroExperience() {
     }, 1150);
   };
 
-  const insight = answers.q1id ? INSIGHTS[answers.q1id] : "";
+  /* התובנה נגזרת מנקודת הפתיחה */
+  const insight = answers.stateId ? INSIGHTS[answers.stateId] : "";
   /* הכותרת המכווצת מהדהדת תמיד את הבחירה *האחרונה* — כך היא מתחלפת
      בכל שאלה ולא נתקעת על התשובה הראשונה. */
-  const lastId =
-    answers.q4id ?? answers.q3id ?? answers.q2id ?? answers.q1srcid ?? answers.q1id;
+  const lastId = answers.timingId ?? answers.srcId ?? answers.stateId;
   const echo = lastId ? ECHO_LINE[lastId] : "";
   /* התג מתכהה עם כל תשובה — מזכוכית שקופה בהתחלה לרקע אטום בסוף */
   const echoDepth = ECHO_DEPTH[phase] ?? 0;
-  const goal = answers.q2id ? GOAL_LINE[answers.q2id] : "";
-  const urgency = answers.q4id ? URGENCY_LINE[answers.q4id] : "";
+  const urgency = answers.timingId ? URGENCY_LINE[answers.timingId] : "";
 
-  /* סיכום האבחון — נכנס גם להודעת הוואטסאפ וגם לעמודת ההודעה בגיליון,
-     כדי שהליד יישמר עם ההקשר ולא רק עם שם וטלפון. */
+  /* סיכום האבחון — נכנס לעמודת ההודעה בגיליון, כדי שהליד יישמר עם
+     ההקשר ולא רק עם שם וטלפון. */
   const summary = useMemo(
     () =>
       [
-        answers.q1 && `מצב נוכחי: ${answers.q1}`,
-        answers.q1src && `מאיפה מגיעים לקוחות היום: ${answers.q1src}`,
+        answers.state && `מצב נוכחי: ${answers.state}`,
+        answers.src && `מאיפה מגיעים לקוחות היום: ${answers.src}`,
         siteUrl && `קישור: ${siteUrl}`,
-        answers.q2 && `מטרה: ${answers.q2}`,
-        answers.q3 && `תחום: ${answers.q3}`,
-        answers.q4 && `לוח זמנים: ${answers.q4}`,
+        answers.timing && `לוח זמנים: ${answers.timing}`,
       ].filter(Boolean) as string[],
     [answers, siteUrl]
   );
-
-  const waHref = useMemo(() => {
-    const lines = [
-      "היי אסף, סיימתי את האבחון באתר של AS digital 👋",
-      ...summary,
-      name && `שם: ${name}`,
-      phone && `טלפון: ${phone}`,
-      "אשמח לשיחת אפיון.",
-    ].filter(Boolean) as string[];
-    return whatsappHref(lines.join("\n"));
-  }, [summary, name, phone]);
 
   /* גם אם ינטוש את האבחון באמצע וילחץ על כפתור וואטסאפ אחר — התשובות
      והפרטים שכבר מילא ילכו איתו לגיליון. */
@@ -125,24 +121,35 @@ export default function HeroExperience() {
     updateLeadDraft({ name, phone, message: summary.join(" | ") });
   }, [name, phone, summary]);
 
+  /* הליד נכתב לגיליון בדיוק כמו קודם; מה שהתחלף הוא מה שקורה אחר כך —
+     במקום לזרוק את המשתמש לוואטסאפ, נשארים באתר עם אישור קצר.
+     בעבר המעבר לוואטסאפ הוציא את המשתמש מהעמוד, ולכן שליחה כפולה כמעט
+     לא קרתה. עכשיו הטופס נשאר מלא מולו — ולחיצה נוספת הייתה מוסיפה
+     שורה זהה לגיליון. שולחים רק כששם או טלפון באמת השתנו. */
+  const submittedKey = useRef<string | null>(null);
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    saveLead({ name, phone, message: summary.join(" | ") }, "אבחון דיגיטלי");
-    window.open(waHref, "_blank", "noopener,noreferrer");
+    const key = `${name.trim()}|${phone.trim()}`;
+    if (submittedKey.current !== key) {
+      submittedKey.current = key;
+      saveLead({ name, phone, message: summary.join(" | ") }, "אבחון דיגיטלי");
+    }
+    setSentOpen(true);
   };
 
   const progress = SYSTEM_PROGRESS[phase] ?? 0.15;
   const focus = 0.9;
 
-  /* מודדים את מרכז האמבלם *ביחס לקנבס* (לא לחלון!) — הקנבס ממלא את
-     ה-section, שיכול להיות גבוה מהמסך (למשל בשלב הטופס). חישוב מול
-     window היה מסיט את ההילה בעשרות פיקסלים. */
+  /* נקודת ההתכנסות של החלקיקים היא הכותרת — מודדים את מרכזה *ביחס
+     לקנבס* (לא לחלון!), כי הקנבס ממלא את ה-section שיכול להיות גבוה
+     מהמסך (למשל בשלב הטופס). חישוב מול window היה מסיט את ההילה
+     בעשרות פיקסלים. */
   const heroRef = useRef<HTMLElement>(null);
-  const cloudRef = useRef<HTMLDivElement>(null);
+  const focusRef = useRef<HTMLDivElement>(null);
   const [targetNdc, setTargetNdc] = useState({ x: 0, y: 0.35 });
   const measure = useCallback(() => {
     const hero = heroRef.current;
-    const el = cloudRef.current;
+    const el = focusRef.current;
     if (!hero || !el) return;
     const box = hero.getBoundingClientRect();
     if (!box.width || !box.height) return;
@@ -196,14 +203,10 @@ export default function HeroExperience() {
 
       <div className="dtx-overlay">
         <div className="container-x dtx-content">
-          {/* ---------- אמבלם "העסק שלך" ---------- */}
-          <div className="dtx-rise" style={{ ["--d" as string]: "0.05s" }}>
-            <CloudEmblem ref={cloudRef} />
-          </div>
-
           {/* ---------- כותרת ראשית — נראית מיד ---------- */}
           <div
-            className={`dtx-headline dtx-rise ${phase !== "q1" ? "dtx-headline--compact" : ""}`}
+            ref={focusRef}
+            className={`dtx-headline dtx-rise ${phase !== "state" ? "dtx-headline--compact" : ""}`}
             style={{ ["--d" as string]: "0.2s", ["--echo-depth" as string]: echoDepth }}
           >
             <h1 className="dtx-h1">
@@ -213,23 +216,52 @@ export default function HeroExperience() {
                   {echo}
                 </span>
               ) : (
-                <>
-                  <span className="dtx-h1__l1">{INTRO.line1}</span>
-                  <span className="dtx-h1__l2">
-                    <span className="dtx-h1__a">{INTRO.line2a}</span>{" "}
-                    <span className="dtx-h1__b">{INTRO.line2b}</span>
-                  </span>
-                </>
+                <span className="dtx-h1__l2">
+                  <span className="dtx-h1__a">{INTRO.titleA}</span>{" "}
+                  <span className="dtx-h1__b">{INTRO.titleB}</span>
+                </span>
               )}
             </h1>
+            {!echo && <p className="dtx-sub">{INTRO.sub}</p>}
           </div>
+
+          {/* ---------- הפעולה הראשית ----------
+              קישור wa.me רגיל בכוונה: LeadTracker מאזין בדלגציה על
+              a[href*="wa.me"] ורושם את הפנייה. הוספת onClick משלנו כאן
+              הייתה מייצרת אירוע כפול על אותה לחיצה. */}
+          {phase === "state" && (
+            <div className="dtx-cta dtx-rise" style={{ ["--d" as string]: "0.35s" }}>
+              <a
+                href={whatsappHref()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-btn glass-btn--primary dtx-cta__btn"
+                aria-label={HERO_CTA.label}
+              >
+                <WhatsAppIcon className="glass-btn__icon" />
+                {HERO_CTA.label}
+              </a>
+              <p className="dtx-cta__reassure">{HERO_CTA.reassure}</p>
+            </div>
+          )}
+
+          {/* המעבר למסלול המשני: קו הפרדה ואחריו כותרת שמסבירה למי
+              השאלון מיועד. שתי השורות והקו יושבים באותו בלוק כדי
+              שההיררכיה "מוכן לדבר / עוד מתלבט" תיקרא במבט אחד. */}
+          {phase === "state" && (
+            <div className="dtx-secondary dtx-rise" style={{ ["--d" as string]: "0.5s" }}>
+              <div className="dtx-divider" aria-hidden="true" />
+              <p className="dtx-secondary__title">{DIAG_INTRO.title}</p>
+              <p className="dtx-secondary__lead">{DIAG_INTRO.lead}</p>
+            </div>
+          )}
 
           {/* ---------- שלבים ---------- */}
           <div className="dtx-step">
             <div key={phase} className="dtx-step__inner">
-              {phase === "q1" && (
-                <StepBlock q={Q1} locked={locked} base={cardsBase}>
-                  {Q1.options.map((o, i) => (
+              {phase === "state" && (
+                <StepBlock q={Q_STATE} locked={locked} base={cardsBase}>
+                  {Q_STATE.options.map((o, i) => (
                     <DiagCard
                       key={o.id}
                       i={i}
@@ -238,8 +270,8 @@ export default function HeroExperience() {
                       dimmed={!!selected && selected !== o.id}
                       onClick={() =>
                         advance(
-                          o.id === "site-weak" ? "q1link" : o.id === "no-site" ? "q1source" : "q2",
-                          { q1: o.label, q1id: o.id },
+                          o.id === "site-weak" ? "link" : o.id === "no-site" ? "source" : "timing",
+                          { state: o.label, stateId: o.id },
                           o.id
                         )
                       }
@@ -250,18 +282,18 @@ export default function HeroExperience() {
                 </StepBlock>
               )}
 
-              {phase === "q1source" && (
+              {phase === "source" && (
                 /* השאלה מוצגת בתג הזכוכית שמעל, ולכן כאן רק האפשרויות */
                 <div className={`dtx-stepblock ${locked ? "is-locked" : ""}`}>
                   <div className="dtx-cards">
-                    {Q1_SOURCE.options.map((o, i) => (
+                    {Q_SOURCE.options.map((o, i) => (
                       <DiagCard
                         key={o.id}
                         i={i}
                         base={cardsBase}
                         selected={selected === o.id}
                         dimmed={!!selected && selected !== o.id}
-                        onClick={() => advance("q2", { q1src: o.label, q1srcid: o.id }, o.id)}
+                        onClick={() => advance("timing", { src: o.label, srcId: o.id }, o.id)}
                       >
                         {o.label}
                       </DiagCard>
@@ -270,15 +302,16 @@ export default function HeroExperience() {
                 </div>
               )}
 
-              {phase === "q1link" && (
+              {phase === "link" && (
                 <div className="dtx-stepblock">
-                  <StepHead title={Q1_LINK.title} lead={Q1_LINK.lead} />
+                  <StepHead title={Q_LINK.title} lead={Q_LINK.lead} />
                   <form
                     className="dtx-linkrow"
                     onSubmit={(e) => {
                       e.preventDefault();
                       setFirstPaint(false);
-                      setPhase("q2");
+                      setPhase("timing");
+                      scrollToTop();
                     }}
                   >
                     <input
@@ -288,12 +321,12 @@ export default function HeroExperience() {
                       inputMode="url"
                       value={siteUrl}
                       onChange={(e) => setSiteUrl(e.target.value)}
-                      placeholder={Q1_LINK.placeholder}
-                      aria-label={Q1_LINK.title}
+                      placeholder={Q_LINK.placeholder}
+                      aria-label={Q_LINK.title}
                     />
                     <div className="dtx-linkbtns">
                       <button type="submit" className="glass-btn glass-btn--primary">
-                        {Q1_LINK.submit}
+                        {Q_LINK.submit}
                         <ArrowIcon width={18} height={18} />
                       </button>
                       <button
@@ -302,60 +335,27 @@ export default function HeroExperience() {
                         onClick={() => {
                           setSiteUrl("");
                           setFirstPaint(false);
-                          setPhase("q2");
+                          setPhase("timing");
+                          scrollToTop();
                         }}
                       >
-                        {Q1_LINK.skip}
+                        {Q_LINK.skip}
                       </button>
                     </div>
                   </form>
                 </div>
               )}
 
-              {phase === "q2" && (
-                <StepBlock q={Q2} locked={locked} base={cardsBase}>
-                  {Q2.options.map((o, i) => (
+              {phase === "timing" && (
+                <StepBlock q={Q_TIMING} locked={locked} base={cardsBase}>
+                  {Q_TIMING.options.map((o, i) => (
                     <DiagCard
                       key={o.id}
                       i={i}
                       base={cardsBase}
                       selected={selected === o.id}
                       dimmed={!!selected && selected !== o.id}
-                      onClick={() => advance("q3", { q2: o.label, q2id: o.id }, o.id)}
-                    >
-                      {o.label}
-                    </DiagCard>
-                  ))}
-                </StepBlock>
-              )}
-
-              {phase === "q3" && (
-                <StepBlock q={Q3} locked={locked} base={cardsBase}>
-                  {Q3.options.map((o, i) => (
-                    <DiagCard
-                      key={o.id}
-                      i={i}
-                      base={cardsBase}
-                      selected={selected === o.id}
-                      dimmed={!!selected && selected !== o.id}
-                      onClick={() => advance("q4", { q3: o.label, q3id: o.id }, o.id)}
-                    >
-                      {o.label}
-                    </DiagCard>
-                  ))}
-                </StepBlock>
-              )}
-
-              {phase === "q4" && (
-                <StepBlock q={Q4} locked={locked} base={cardsBase}>
-                  {Q4.options.map((o, i) => (
-                    <DiagCard
-                      key={o.id}
-                      i={i}
-                      base={cardsBase}
-                      selected={selected === o.id}
-                      dimmed={!!selected && selected !== o.id}
-                      onClick={() => advance("form", { q4: o.label, q4id: o.id }, o.id)}
+                      onClick={() => advance("form", { timing: o.label, timingId: o.id }, o.id)}
                     >
                       {o.label}
                     </DiagCard>
@@ -371,9 +371,7 @@ export default function HeroExperience() {
 
                     {insight && (
                       <div className="dtx-insight">
-                        <span className="dtx-insight__label">{DIAG_FORM.insightLabel}</span>
                         <p className="dtx-insight__text">{insight}</p>
-                        {goal && <p className="dtx-insight__goal">{goal}</p>}
                         {urgency && <p className="dtx-insight__urgency">{urgency}</p>}
                       </div>
                     )}
@@ -425,6 +423,32 @@ export default function HeroExperience() {
           </div>
         </div>
 
+        {/* הוכחה חברתית — בדסקטופ בפינות התחתונות משני צדי הקומפוזיציה,
+            במובייל בערימה מסודרת מתחת לכפתורים, פתוחה תמיד ומתחת לקיפול.
+            בשלב הטופס היא יורדת, כדי לא להתחרות ברגע ההמרה. */}
+        {phase !== "form" && (
+          <div className="dtx-proof">
+            {/* עוטף פנימי — בפריסת הערימה הוא הגריד של הערימה, ובדסקטופ
+                הוא display:contents והכרטיסים חוזרים להיות ילדים ישירים
+                של ה-flex. */}
+            <div className="dtx-proof__inner">
+              {HERO_PROOF.map((t, i) => (
+                <figure
+                  key={t.name}
+                  className="dtx-quote dtx-rise"
+                  style={{ ["--d" as string]: `${(firstPaint ? 1.5 : 0.5) + i * 0.12}s` }}
+                >
+                  <blockquote className="dtx-quote__text">{t.quote}</blockquote>
+                  <figcaption className="dtx-quote__by">
+                    <span className="dtx-quote__name">{t.name}</span>
+                    <span className="dtx-quote__role">{t.role}</span>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        )}
+
         <a href="#services" className="dtx-scroll" aria-label="המשיכו לתוכן">
           <span>{INTRO.hint}</span>
           <span className="dtx-scroll__mouse">
@@ -432,6 +456,8 @@ export default function HeroExperience() {
           </span>
         </a>
       </div>
+
+      <SentModal open={sentOpen} onClose={() => setSentOpen(false)} />
     </section>
   );
 }
@@ -453,7 +479,7 @@ function StepBlock({
   base,
   children,
 }: {
-  q: { n: string; title: string; lead?: string };
+  q: { title: string; lead?: string };
   locked?: boolean;
   base: number;
   children: React.ReactNode;

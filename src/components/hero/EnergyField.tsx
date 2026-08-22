@@ -55,7 +55,13 @@ const SPHERE_VERT = /* glsl */ `
     float drain = 1.0 - uProgress * 0.55;
     // הבהוב עדין מאוד — "חיים" בלי רעש
     float twinkle = 0.85 + 0.15 * sin(uTime * 0.5 + aSeed * 12.0);
-    vA = (0.62 + 0.48 * n) * edge * drain * twinkle;
+    // עומק: החזית בהירה מהגב. בלי זה סיבוב של כדור סימטרי לא נראה בכלל,
+    // כי שדה השקיפות נשאר זהה בכל זווית. עכשיו כל נקודה מתבהרת ודוהה
+    // תוך כדי ההקפה — וזה מה שקורא לעין כ"חי".
+    // הקצוות (1.32/0.68) סימטריים סביב 1.0, כדי שהבהירות הכוללת של הענן
+    // תישאר כשהייתה — רק מתחלקת אחרת בין החזית לגב.
+    float depth = clamp((-mv.z - (6.4 - ${SPHERE_R.toFixed(2)})) / ${(2 * SPHERE_R).toFixed(2)}, 0.0, 1.0);
+    vA = (0.62 + 0.48 * n) * edge * drain * twinkle * mix(1.32, 0.68, depth);
   }
 `;
 
@@ -163,12 +169,15 @@ export default function EnergyField({
   targetNdc,
   quality = "high",
   scale = 1,
+  spin = 0.062,
 }: {
   progress: number;
   focus: number;
   targetNdc: { x: number; y: number };
   quality?: "high" | "low";
   scale?: number;
+  /** רדיאנים לשנייה סביב ציר הכדור. 0 = עצירה (העדפת תנועה מופחתת). */
+  spin?: number;
 }) {
   const root = useRef<THREE.Group>(null);
   const sphereGroup = useRef<THREE.Group>(null);
@@ -354,7 +363,8 @@ export default function EnergyField({
       u.uTarget.value.copy(targetWorld.current);
     }
 
-    if (sphereGroup.current) sphereGroup.current.rotation.y = t * 0.012;
+    // סיבוב רציף ואיטי סביב הציר הנטוי של הכדור (הטיה בקבוצת האב).
+    if (sphereGroup.current) sphereGroup.current.rotation.y = t * spin;
     if (root.current) {
       root.current.rotation.y = state.pointer.x * 0.05;
       root.current.rotation.x = -state.pointer.y * 0.035;
@@ -364,29 +374,34 @@ export default function EnergyField({
 
   return (
     <group ref={root}>
-      <group ref={sphereGroup}>
-        <points geometry={sphereGeo} frustumCulled={false} renderOrder={0}>
-          <shaderMaterial
-            ref={sphereHaloM}
-            uniforms={sphereHaloU}
-            vertexShader={SPHERE_VERT}
-            fragmentShader={SPHERE_FRAG}
-            transparent
-            depthWrite={false}
-            blending={THREE.AdditiveBlending}
-          />
-        </points>
-        <points geometry={sphereGeo} frustumCulled={false} renderOrder={1}>
-          <shaderMaterial
-            ref={sphereCoreM}
-            uniforms={sphereCoreU}
-            vertexShader={SPHERE_VERT}
-            fragmentShader={SPHERE_FRAG}
-            transparent
-            depthWrite={false}
-            blending={THREE.AdditiveBlending}
-          />
-        </points>
+      {/* קבוצת ההטיה — נותנת לציר הסיבוב נטייה קלה, כמו גלובוס.
+          חייבת להיות אב לקבוצה המסתובבת: הטיה על אותה קבוצה הייתה
+          מסתובבת יחד איתה ולא משנה כלום. */}
+      <group rotation={[0.14, 0, 0.2]}>
+        <group ref={sphereGroup}>
+          <points geometry={sphereGeo} frustumCulled={false} renderOrder={0}>
+            <shaderMaterial
+              ref={sphereHaloM}
+              uniforms={sphereHaloU}
+              vertexShader={SPHERE_VERT}
+              fragmentShader={SPHERE_FRAG}
+              transparent
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
+            />
+          </points>
+          <points geometry={sphereGeo} frustumCulled={false} renderOrder={1}>
+            <shaderMaterial
+              ref={sphereCoreM}
+              uniforms={sphereCoreU}
+              vertexShader={SPHERE_VERT}
+              fragmentShader={SPHERE_FRAG}
+              transparent
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
+            />
+          </points>
+        </group>
       </group>
 
       <points geometry={gatherGeo} frustumCulled={false} renderOrder={2}>

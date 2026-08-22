@@ -1,0 +1,79 @@
+/* ============================================================================
+   אישור שליחה — חלון בהיר וקטן, משותף לטופס ההירו ולטופס יצירת הקשר.
+   מכוון להיות שקט: בלי צבעי מותג צועקים, בלי אייקון חגיגי.
+   כפתור הסגירה הוא האלמנט הכי מודגש בו בכוונה.
+   ============================================================================ */
+.sent-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(6, 12, 20, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: sent-modal-fade 0.22s ease both;
+}
+.sent-modal__card {
+  position: relative;
+  width: min(24rem, 100%);
+  border-radius: 18px;
+  /* הריפוד העליון מפנה שורה שלמה לכפתור הסגירה, שלא ידחק לטקסט */
+  padding: 3.5rem 1.6rem 1.9rem;
+  text-align: center;
+  background: #fbfcfe;
+  border: 1px solid rgba(14, 32, 51, 0.1);
+  box-shadow: 0 28px 64px -28px rgba(3, 10, 20, 0.55);
+  animation: sent-modal-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.sent-modal__text {
+  margin: 0;
+  color: #17232f;
+  font-size: 1rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+/* ב-RTL זו הפינה השמאלית העליונה — שם העין מחפשת סגירה */
+.sent-modal__close {
+  position: absolute;
+  inset-block-start: 0.65rem;
+  inset-inline-end: 0.65rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  /* מילוי אפור בהיר, לא לבן: על כרטיס לבן כפתור לבן נקרא כמו קישוט.
+     כאן הוא נבדל מהרקע ומזוהה מיד כאלמנט לחיץ. */
+  background: #eaeff5;
+  border: 1.5px solid rgba(14, 32, 51, 0.24);
+  color: #0f1c28;
+  cursor: pointer;
+  transition: background 0.25s var(--ease-brand), border-color 0.25s, transform 0.25s var(--ease-brand);
+}
+.sent-modal__close:hover {
+  background: #d8e1ea;
+  border-color: rgba(14, 32, 51, 0.5);
+  transform: scale(1.06);
+}
+.sent-modal__close:focus-visible {
+  outline: 2px solid var(--accent-500);
+  outline-offset: 2px;
+}
+.sent-modal__close:active { transform: scale(0.96); }
+
+@keyframes sent-modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes sent-modal-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sent-modal, .sent-modal__card { animation: none; }
+  .sent-modal__close:hover { transform: none; }
+}
+html.a11y-no-motion .sent-modal,
+html.a11y-no-motion .sent-modal__card { animation: none; }

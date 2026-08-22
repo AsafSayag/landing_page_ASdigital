@@ -53,21 +53,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ============ "אם אתה מרגיש אחד מהדברים הבאים" ============ */}
-        <PainPoints />
-
-        {/* ================= STATS ================= */}
-        <section className="surface-900 stats-band" aria-label="נתוני מפתח">
-          <div className="container-x stats-grid">
-            {STATS.map((s) => (
-              <div key={s.label} className="stat-item" data-reveal>
-                <div className="stat-value ltr">{s.value}</div>
-                <div className="caption stat-label">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
 {/* ================= RESULTS + CASE ================= */}
         <section id="results" className="section surface-950">
           <div className="ambient-glow" style={{ opacity: 0.55 }} />
@@ -144,6 +129,21 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ================= STATS ================= */}
+        <section className="surface-900 stats-band" aria-label="נתוני מפתח">
+          <div className="container-x stats-grid">
+            {STATS.map((s) => (
+              <div key={s.label} className="stat-item" data-reveal>
+                <div className="stat-value ltr">{s.value}</div>
+                <div className="caption stat-label">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ============ "אם אתה מרגיש אחד מהדברים הבאים" ============ */}
+        <PainPoints />
 
 {/* ================= FINAL CTA ================= */}
         <section className="section surface-900 final-cta">
