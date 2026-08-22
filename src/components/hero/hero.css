@@ -185,6 +185,19 @@
 /* במצב המכווץ נשארת רק שורת ההד */
 .dtx-headline--compact .dtx-sub { display: none; }
 
+/* בדסקטופ הכותרת והתת-כותרת עולות מעט — יש שם עודף מרווח בין ההאדר
+   לכותרת, והפתיחה נקראת חזק יותר כשהיא גבוהה יותר במסך.
+   ההסטה מקוזזת בשוליים התחתונים: גובה הבלוק לא משתנה, ולכן ה-CTA,
+   המעבר לשאלון והקלפים נשארים בדיוק היכן שהיו.
+   רק במצב הפתוח — במצב המכווץ (אחרי תשובה) אין CTA מתחת, וההסטה
+   הייתה פשוט פותחת חור מעל השאלה. */
+@media (min-width: 1260px) {
+  .dtx-headline:not(.dtx-headline--compact) {
+    --dtx-lift: clamp(1.25rem, 3vh, 2.25rem);
+    margin-block: calc(var(--dtx-lift) * -1) var(--dtx-lift);
+  }
+}
+
 /* ============================================================================
    הפעולה הראשית — האלמנט הכי בולט אחרי הכותרת.
    הכפתור נשאר בלבן של המערכת; מה שמייחד אותו הוא הגודל וההילה,
@@ -247,10 +260,12 @@
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(159, 220, 255, 0.28), transparent);
 }
+/* הוגדלה: מאז שירדה כותרת השלב שמתחת, זו הכותרת היחידה שמציגה את
+   השאלון. עדיין רחוקה מ-3rem של ה-h1 — נשארת כותרת משנה. */
 .dtx-secondary__title {
   margin: clamp(0.7rem, 1.6vh, 1.05rem) 0 0;
   font-family: var(--font-display);
-  font-size: 1.02rem;
+  font-size: clamp(1.14rem, 1.7vw, 1.28rem);
   font-weight: 600;
   line-height: 1.35;
   color: rgba(232, 245, 253, 0.94);
@@ -356,6 +371,9 @@ html.a11y-no-motion .dtx-h1__echo { animation: none; }
 
 .dtx-cards { display: grid; grid-template-columns: 1fr; gap: 0.7rem; margin-block-start: 0.9rem; }
 @media (min-width: 620px) { .dtx-cards { grid-template-columns: repeat(2, 1fr); } }
+/* שלב בלי כותרת: 0.9rem היה המרווח *שמתחת לכותרת*, ובלעדיה הוא נקרא
+   כחור ריק. נשארת נשימה מינימלית מול הבלוק שמעל. */
+.dtx-stepblock--nohead .dtx-cards { margin-block-start: 0.25rem; }
 
 /* קלף בחירה — זכוכית כהה עם קונטרסט מספיק כדי לקרוא "לחיץ" מיד.
    הרקע הוא שכבת דיו כהה משלו (ולא רק שקיפות), אחרת החלקיקים שמאחור
@@ -563,12 +581,87 @@ html.a11y-no-motion .dtx-card:hover { transform: none; }
     /* 17.5vw שומר מרווח נשימה מול השאלון גם ב-1260px בדיוק */
     width: min(17rem, 17.5vw);
     padding: 1rem 1.15rem;
+    /* בדסקטופ הכרטיסים יושבים לבד על הרקע הכהה ובאטימות 0.86 הם היו
+       שני משטחים בהירים שמושכים את העין לפני הכותרת וה-CTA. כאן הם
+       יורדים לזכוכית מעושנת: אותו גודל ומיקום, נוכחות משנית.
+       *לא* דרך opacity — ל-.dtx-rise יש אנימציית opacity עם fill both
+       שהייתה דורסת אותה. */
+    background: rgba(240, 246, 252, 0.66);
+    border-color: rgba(14, 32, 51, 0.05);
+    /* צל רדוד וחיוור יותר: הכרטיס מונח על הרקע במקום לרחף מעליו */
+    box-shadow: 0 12px 28px -28px rgba(2, 6, 12, 0.45);
   }
+  /* הטקסט מתעדן יחד עם המשטח, אבל נשאר מעל 5:1 מול הרקע החדש */
+  .dtx-quote__text { color: rgba(23, 35, 47, 0.86); }
+  .dtx-quote__name { color: rgba(15, 28, 40, 0.88); }
+  .dtx-quote__role { color: rgba(23, 35, 47, 0.55); }
   /* הזזה אנכית מדורגת — הכרטיסים לא יושבים על אותו קו.
      דרך margin ולא transform: ל-.dtx-rise יש אנימציה על transform
      עם fill both, והיא הייתה דורסת כל transform סטטי כאן. */
   .dtx-quote:first-child { margin-block-end: 5rem; }
   .dtx-quote:last-child { margin-block-start: 5rem; }
+}
+
+/* ---------- פריסת הערימה: קרוסלה של עדות אחת ----------
+   מתחת ל-1260px אין מקום לשתי כרטיסיות בלי לדחוף את השאלון מטה, ולכן
+   הן נערמות באותו תא גריד ומתחלפות במקומן כל 20 שניות. הגובה נקבע לפי
+   הגבוהה מביניהן (שתיהן תופסות את אותו תא), כך שההחלפה לא מקפיצה את
+   מה שמתחת. */
+@media (max-width: 1259px) {
+  .dtx-proof__inner { gap: 0; }
+  .dtx-proof__inner > .dtx-quote {
+    grid-area: 1 / 1;
+    /* ל-.dtx-rise יש אנימציה עם fill:both שנועלת את ה-opacity על 1 —
+       בקרוסלה השקיפות שייכת לכרטיס הפעיל, ולכן היא מבוטלת כאן.
+       visibility מוציא את הכרטיס המוסתר גם מעץ הנגישות ומהטאב. */
+    animation: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease, visibility 0.6s;
+  }
+  .dtx-proof__inner > .dtx-quote.is-current {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .dtx-proof__dots {
+    margin-block-start: 0.7rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.45rem;
+  }
+  .dtx-proof__dot {
+    /* שטח המגע הוא 24px מלאים; הנקודה עצמה קטנה ויושבת במרכזו */
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+  .dtx-proof__dot::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(223, 240, 251, 0.28);
+    transition: background 0.3s ease, width 0.3s ease;
+  }
+  .dtx-proof__dot.is-current::before {
+    width: 16px;
+    background: rgba(159, 220, 255, 0.85);
+  }
+}
+/* המעבר עצמו הוא קישוט — התוכן עדיין מתחלף, אבל בלי הצטלבות רכה */
+@media (max-width: 1259px) and (prefers-reduced-motion: reduce) {
+  .dtx-proof__inner > .dtx-quote { transition: none; }
+  .dtx-proof__dot::before { transition: none; }
+}
+/* בדסקטופ אין קרוסלה ולכן אין נקודות */
+@media (min-width: 1260px) {
+  .dtx-proof__dots { display: none; }
 }
 
 /* בפריסת הערימה העדויות פתוחות תמיד — בלי פתיחה בגלילה — אבל *מתחת
@@ -654,7 +747,7 @@ html.a11y-no-motion .dtx-card:hover { transform: none; }
   /* המעבר לשאלון מתהדק במובייל — שלוש שורות טקסט לפני הקלפים היו
      דוחפות אותם רחוק מדי מטה. ההפרדה נשמרת דרך הקו והמרווח שמעל. */
   .dtx-secondary { margin-block-start: 1.15rem; }
-  .dtx-secondary__title { margin-block-start: 0.7rem; font-size: 0.98rem; }
+  .dtx-secondary__title { margin-block-start: 0.7rem; font-size: 1.08rem; }
   .dtx-secondary__lead { margin-block-start: 0.2rem; font-size: 0.82rem; }
   /* רמז הגלילה מיותר כאן: "ענו על 3 שאלות" כבר מסביר מה למטה,
      והמיקרו-קופי מתחת ל-CTA כבר אומר "ללא התחייבות". */
