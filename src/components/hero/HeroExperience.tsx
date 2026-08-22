@@ -42,6 +42,35 @@ function useWebGL() {
   return ok;
 }
 
+/* בפריסת הערימה שתי העדויות לא מוצגות זו מתחת לזו אלא מתחלפות במקומן.
+   20 שניות זה קצב איטי בכוונה: מספיק זמן לקרוא בנחת, ומספיק נדיר כדי
+   שההחלפה לא תתחרה על תשומת הלב עם הכותרת וה-CTA.
+   1259px הוא בדיוק המשלים של נקודת השבירה שבה הן עוברות לצדדים. */
+const PROOF_ROTATE_MS = 20_000;
+
+function useProofCarousel(count: number) {
+  const [carousel, setCarousel] = useState(false);
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1259px)");
+    const sync = () => setCarousel(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  /* הטיימר נבנה מחדש בכל החלפה — כך לחיצה על נקודה מאפסת את הספירה
+     ולא משאירה את הכרטיס החדש על המסך לשבריר שנייה בלבד. */
+  useEffect(() => {
+    if (!carousel || count < 2) return;
+    const t = window.setTimeout(() => setIdx((i) => (i + 1) % count), PROOF_ROTATE_MS);
+    return () => window.clearTimeout(t);
+  }, [carousel, count, idx]);
+
+  return { idx, setIdx };
+}
+
 type Answers = {
   state?: string; stateId?: string;      // נקודת הפתיחה
   src?: string; srcId?: string;          // מקור הלקוחות (למי שאין אתר)
@@ -63,6 +92,8 @@ export default function HeroExperience() {
   const [firstPaint, setFirstPaint] = useState(true);
   /* אישור השליחה — מחליף את המעבר לוואטסאפ */
   const [sentOpen, setSentOpen] = useState(false);
+  /* העדות המוצגת בפריסת הערימה (בדסקטופ שתיהן גלויות ממילא) */
+  const { idx: proofIdx, setIdx: setProofIdx } = useProofCarousel(HERO_PROOF.length);
 
   useEffect(() => setMounted(true), []);
 
@@ -435,7 +466,7 @@ export default function HeroExperience() {
               {HERO_PROOF.map((t, i) => (
                 <figure
                   key={t.name}
-                  className="dtx-quote dtx-rise"
+                  className={`dtx-quote dtx-rise${i === proofIdx ? " is-current" : ""}`}
                   style={{ ["--d" as string]: `${(firstPaint ? 1.5 : 0.5) + i * 0.12}s` }}
                 >
                   <blockquote className="dtx-quote__text">{t.quote}</blockquote>
@@ -446,6 +477,23 @@ export default function HeroExperience() {
                 </figure>
               ))}
             </div>
+            {/* נקודות הניווט — רק בפריסת הערימה, שם מוצגת עדות אחת בכל רגע.
+                בלעדיהן ההחלפה נראית כמו תוכן שמתחלף מעצמו בלי סיבה.
+                הכרטיס הלא-פעיל מוסתר ב-visibility ולכן ממילא לא בעץ הנגישות. */}
+            {HERO_PROOF.length > 1 && (
+              <div className="dtx-proof__dots">
+                {HERO_PROOF.map((t, i) => (
+                  <button
+                    key={t.name}
+                    type="button"
+                    className={`dtx-proof__dot${i === proofIdx ? " is-current" : ""}`}
+                    aria-label={`עדות ${i + 1} מתוך ${HERO_PROOF.length}`}
+                    aria-current={i === proofIdx}
+                    onClick={() => setProofIdx(i)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -479,16 +527,25 @@ function StepBlock({
   base,
   children,
 }: {
-  q: { title: string; lead?: string };
+  /* options נדרש כאן רק כדי ש-Q_STATE (שאין לו יותר title) לא ייפול על
+     בדיקת ה-weak type של TS — טיפוס שכל שדותיו אופציונליים דוחה אובייקט
+     בלי אף שדה משותף. */
+  q: { title?: string; lead?: string; options: { id: string; label: string }[] };
   locked?: boolean;
   base: number;
   children: React.ReactNode;
 }) {
+  /* שלב בלי כותרת (שאלת הפתיחה) לא מרנדר את בלוק הראש בכלל — עוטף ריק
+     היה משאיר את המרווח שמעל הקלפים ותו לא. --nohead מבטל גם אותו. */
   return (
-    <div className={`dtx-stepblock ${locked ? "is-locked" : ""}`}>
-      <div className="dtx-rise" style={{ ["--d" as string]: `${Math.max(base - 0.25, 0)}s` }}>
-        <StepHead title={q.title} lead={q.lead} />
-      </div>
+    <div
+      className={`dtx-stepblock ${q.title ? "" : "dtx-stepblock--nohead"} ${locked ? "is-locked" : ""}`}
+    >
+      {q.title && (
+        <div className="dtx-rise" style={{ ["--d" as string]: `${Math.max(base - 0.25, 0)}s` }}>
+          <StepHead title={q.title} lead={q.lead} />
+        </div>
+      )}
       <div className="dtx-cards">{children}</div>
     </div>
   );
