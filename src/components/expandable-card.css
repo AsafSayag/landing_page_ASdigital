@@ -42,6 +42,18 @@
 .xcard__title { display: block; }
 .xcard__tagline { font-size: 0.95rem; line-height: 1.4; }
 
+/* --- גובה אחיד לכרטיסי השירותים ---
+   הכותרות והתגיות שם נעות בין שורה לשתיים, ולכן הכרטיסים הסגורים יצאו
+   בגבהים שונים. במקום לבטל את align-self: start (שהיה גורם לכרטיס פתוח
+   למתוח את שכניו לגובהו), שומרים מקום קבוע לשתי שורות בכל אחד מהם.
+   רק מ-620px, כשהגריד רב-עמודתי: בערימה של עמודה אחת אי אפשר להשוות
+   גבהים ממילא, ושורה ריקה בכל כרטיס רק הייתה מאריכה את המובייל.
+   2.5em = 2 × line-height 1.25 של .h3 · 2.8em = 2 × line-height 1.4 של התגית. */
+@media (min-width: 620px) {
+  .services-grid .xcard__title { min-height: 2.5em; }
+  .services-grid .xcard__tagline { min-height: 2.8em; }
+}
+
 .xcard__chev {
   width: 1.4rem;
   height: 1.4rem;

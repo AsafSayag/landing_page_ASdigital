@@ -98,6 +98,10 @@
 
 /* יחסי (לא absolute) כדי שההירו יגדל אם התוכן גבוה מהמסך */
 .dtx-overlay {
+  /* משתנה ולא ערך ישיר: בפריסת הערימה מחשבים ממנו את גובה המסך הראשון
+     (100svh פחות הריפוד העליון), כדי שהעדויות ייפלו בדיוק מתחת לקיפול */
+  --dtx-pad-top: 6rem;
+
   position: relative;
   z-index: 4;
   width: 100%;
@@ -106,7 +110,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-block: 6rem 5rem;
+  padding-block: var(--dtx-pad-top) 5rem;
   pointer-events: none;
   text-align: center;
 }
@@ -115,7 +119,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(0.9rem, 2vh, 1.5rem);
+  /* צומצם: נוספו ה-CTA והמעבר לשאלון, וללא הידוק ההירו היה מתארך */
+  gap: clamp(0.55rem, 1.3vh, 1rem);
   position: relative;
 }
 /* סקרים עדין — רק כדי לשמור קריאוּת, בלי לחנוק את החלקיקים */
@@ -148,85 +153,119 @@
   .dtx-rise { animation: none; opacity: 1; transform: none; }
 }
 
-/* ---------- אמבלם "העסק שלך" ---------- */
-.cloud-emblem {
-  position: relative;
-  width: clamp(84px, 9vw, 116px);
-  margin-inline: auto;
-  display: grid;
-  place-items: center;
-  animation: cloud-float 9s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-}
-@keyframes cloud-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-.cloud-emblem::before {
-  content: "";
-  position: absolute;
-  inset: -75%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(108, 200, 255, 0.22), transparent 64%);
-  filter: blur(14px);
-  z-index: -1;
-  pointer-events: none;
-}
-.cloud-emblem__svg {
-  width: 100%;
-  height: auto;
-  display: block;
-  filter: drop-shadow(0 0 16px rgba(108, 200, 255, 0.28));
-}
-.cloud-emblem__label {
-  position: absolute;
-  inset-block-start: 56%;
-  inset-inline-start: 50%;
-  transform: translate(50%, -50%);
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(0.62rem, 1vw, 0.76rem);
-  letter-spacing: -0.005em;
-  color: rgba(240, 250, 255, 0.95);
-  white-space: nowrap;
-}
-@media (prefers-reduced-motion: reduce) {
-  .cloud-emblem { animation: none; }
-}
-
 /* ---------- כותרת ראשית ---------- */
-.dtx-headline { max-width: min(72rem, 94vw); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.dtx-headline { max-width: min(60rem, 94vw); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 .dtx-h1 { margin: 0; font-family: var(--font-display); line-height: 1.14; }
-.dtx-h1__l1 {
-  display: block;
-  font-weight: 600;
-  /* מובייל: 5vw — בטלפון של 390px זה ~19.5px מול 15.2px קודם. דסקטופ נעצר ב-1.5rem. */
-  font-size: clamp(1.25rem, 5vw, 1.5rem);
-  color: rgba(226, 245, 255, 0.95);
-  letter-spacing: 0.005em;
-  line-height: 1.35;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7);
-  margin-block-end: 0.8rem;
-}
 .dtx-h1__l2 {
   display: block;
   font-weight: 700;
-  font-size: min(3.2rem, 4.3vw);
+  font-size: clamp(1.75rem, 4.1vw, 3rem);
   letter-spacing: -0.028em;
-  line-height: 1.1;
+  line-height: 1.14;
   color: #fff;
   text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8);
-  white-space: nowrap; /* דסקטופ: הכל בשורה אחת */
+  text-wrap: balance;
 }
-.dtx-h1__a, .dtx-h1__b { display: inline; }
+/* שתי שורות מפורשות בכל רוחב — שבירה בנקודה שנקבעה בתוכן, לא ברוחב */
+.dtx-h1__a, .dtx-h1__b { display: block; }
 
-/* מובייל: שתי שורות מפורשות */
-@media (max-width: 700px) {
-  .dtx-h1__l2 { white-space: normal; font-size: clamp(1.85rem, 8.2vw, 2.6rem); }
-  .dtx-h1__a, .dtx-h1__b { display: block; }
+/* ---------- תת-כותרת ---------- */
+.dtx-sub {
+  margin: clamp(0.7rem, 1.3vh, 1rem) auto 0;
+  /* 38rem ולא 42: מידת שורה נוחה לקריאה, ~65 תווים */
+  max-width: 38rem;
+  font-size: clamp(0.97rem, 1.45vw, 1.12rem);
+  line-height: 1.65;
+  font-weight: 400;
+  /* הועלה מ-0.74 — על רקע החלקיקים הטקסט המשני היה חלש מדי */
+  color: rgba(226, 241, 251, 0.86);
+  text-wrap: balance;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
+}
+/* במצב המכווץ נשארת רק שורת ההד */
+.dtx-headline--compact .dtx-sub { display: none; }
+
+/* ============================================================================
+   הפעולה הראשית — האלמנט הכי בולט אחרי הכותרת.
+   הכפתור נשאר בלבן של המערכת; מה שמייחד אותו הוא הגודל וההילה,
+   ולא צבע חדש שלא קיים בפלטה.
+   ============================================================================ */
+.dtx-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-block-start: clamp(0.2rem, 0.8vh, 0.55rem);
+}
+.dtx-cta__btn {
+  padding: 18px 44px;
+  font-size: 1.08rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 0 0 1px rgba(255, 255, 255, 0.5),
+    0 14px 44px rgba(10, 2, 6, 0.5),
+    0 0 48px rgba(159, 220, 255, 0.3);
+}
+@media (hover: hover) {
+  .dtx-cta__btn:hover {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      0 0 0 1px rgba(255, 255, 255, 0.65),
+      0 18px 52px rgba(10, 2, 6, 0.6),
+      0 0 62px rgba(159, 220, 255, 0.45);
+  }
+}
+/* שורת ההרגעה — צמודה לכפתור (0.55rem) כדי שתיקרא כחלק ממנו ולא
+   כפסקה עצמאית. קטנה מתת-הכותרת, אבל 0.72 אטימות ולא פחות: זו שורה
+   שאמורה להיקרא, לא קרדיט. */
+.dtx-cta__reassure {
+  margin: 0.55rem 0 0;
+  max-width: 26rem;
+  font-size: 0.83rem;
+  line-height: 1.5;
+  font-weight: 500;
+  color: rgba(223, 240, 251, 0.72);
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+}
+
+/* ============================================================================
+   המסלול המשני — כניסה לשאלון.
+   ============================================================================ */
+.dtx-secondary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* המרווח מעל גדול מזה שמתחת: כך הבלוק "נדבק" לשאלון שאחריו
+     ומתנתק מאזור ההמרה שמעליו. */
+  margin-block-start: clamp(1.1rem, 2.6vh, 1.9rem);
+}
+/* קו הפרדה דק בין הפעולה הראשית לשאלון — מסמן "מסלול חלופי" בלי מילים */
+.dtx-divider {
+  width: min(24rem, 62%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(159, 220, 255, 0.28), transparent);
+}
+.dtx-secondary__title {
+  margin: clamp(0.7rem, 1.6vh, 1.05rem) 0 0;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: rgba(232, 245, 253, 0.94);
+  letter-spacing: -0.01em;
+}
+.dtx-secondary__lead {
+  margin: 0.25rem 0 0;
+  max-width: 28rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: rgba(223, 240, 251, 0.62);
+  text-wrap: balance;
 }
 
 /* --- מצב מכווץ: הכותרת הופכת לתג זכוכית בצבעי ההירו --- */
-.dtx-headline--compact .dtx-h1__l1 { display: none; }
 .dtx-headline--compact .dtx-h1__l2 {
   display: inline-block;
   white-space: normal;
@@ -252,9 +291,6 @@
     0 10px 30px -18px rgba(0, 0, 0, 0.9),
     0 0 22px -8px rgba(108, 200, 255, 0.35);
 }
-.dtx-headline--compact .dtx-h1__a,
-.dtx-headline--compact .dtx-h1__b { display: inline; }
-
 .dtx-h1__echo {
   animation: dtx-echo-in 0.55s var(--ease-brand) both;
 }
@@ -301,61 +337,113 @@ html.a11y-no-motion .dtx-h1__echo { animation: none; }
 }
 
 /* ---------- שלבים ---------- */
-.dtx-step { width: 100%; max-width: 44rem; display: flex; justify-content: center; margin-block-start: clamp(0.5rem, 2vh, 1.25rem); }
+.dtx-step { width: 100%; max-width: 44rem; display: flex; justify-content: center; margin-block-start: clamp(0.35rem, 1vh, 0.7rem); }
 .dtx-step__inner { width: 100%; }
 .dtx-stepblock.is-locked { pointer-events: none; }
 .dtx-step__head { display: flex; align-items: center; justify-content: center; gap: 0.65rem; }
-.dtx-step__n {
-  font-family: var(--font-display); font-weight: 700; font-size: 0.75rem;
-  color: rgba(159, 220, 255, 0.9); padding: 0.18rem 0.5rem; border-radius: 7px;
-  border: 1px solid rgba(108, 200, 255, 0.25); background: rgba(108, 200, 255, 0.07);
-}
+/* השאלה הוקטנה: היא כבר לא הפעולה הראשית במסך, וב-1.6rem היא הייתה
+   מתחרה בכותרת ובכפתור. */
 .dtx-step__title {
   margin: 0; font-family: var(--font-display); font-weight: 600;
-  font-size: clamp(1.2rem, 2.6vw, 1.6rem); color: #fff; letter-spacing: -0.015em;
+  font-size: clamp(1.05rem, 2vw, 1.28rem); color: #fff; letter-spacing: -0.015em;
 }
+/* המרווח מעל הקלפים יושב על .dtx-cards ולא בתחתית ה-lead, כדי ששלב
+   בלי lead (שאלת הפתיחה) לא ידביק את הקלפים לכותרת השאלה. */
 .dtx-step__lead {
-  margin: 0.55rem auto 1.5rem; max-width: 30rem;
-  color: rgba(223, 240, 251, 0.6); font-size: 0.95rem;
+  margin: 0.5rem auto 0; max-width: 30rem;
+  color: rgba(223, 240, 251, 0.78); font-size: 0.93rem;
 }
 
-.dtx-cards { display: grid; grid-template-columns: 1fr; gap: 0.7rem; }
+.dtx-cards { display: grid; grid-template-columns: 1fr; gap: 0.7rem; margin-block-start: 0.9rem; }
 @media (min-width: 620px) { .dtx-cards { grid-template-columns: repeat(2, 1fr); } }
 
+/* קלף בחירה — זכוכית כהה עם קונטרסט מספיק כדי לקרוא "לחיץ" מיד.
+   הרקע הוא שכבת דיו כהה משלו (ולא רק שקיפות), אחרת החלקיקים שמאחור
+   בולעים את גבול הכפתור וכל הרשת נראית כמו טקסט צף. */
 .dtx-card {
   position: relative;
+  overflow: hidden;
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
   text-align: start;
   padding: 1.05rem 1.25rem;
   border-radius: 14px;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(255, 255, 255, 0.96);
   font-family: var(--font-body); font-weight: 500; font-size: 1.01rem;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  background:
+    linear-gradient(rgba(6, 14, 24, 0.5), rgba(6, 14, 24, 0.5)),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.028) 52%, rgba(108, 200, 255, 0.06));
+  border: 1px solid rgba(159, 220, 255, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 14px 34px -26px rgba(0, 0, 0, 1);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  will-change: transform;
   transition: border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
               background 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.45s, color 0.35s;
+              box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.35s;
 }
-.dtx-card__arrow { color: rgba(159, 220, 255, 0.75); flex: none; transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s; }
+/* ניצוץ שעובר על פני הכפתור ברחיפה — מתחיל מחוץ לקצה ההתחלתי (ימין ב-RTL) */
+.dtx-card::after {
+  content: "";
+  position: absolute;
+  inset-block: -30%;
+  inset-inline-start: -55%;
+  width: 42%;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(190, 232, 255, 0.16), transparent);
+  transform: translateX(0) rotate(8deg);
+  opacity: 0;
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s;
+}
+.dtx-card__arrow {
+  color: rgba(159, 220, 255, 0.8); flex: none;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s;
+}
 @media (hover: hover) {
   .dtx-card:hover {
-    border-color: rgba(108, 200, 255, 0.42);
-    background: rgba(108, 200, 255, 0.07);
+    transform: translateY(-2px) scale(1.012);
+    border-color: rgba(159, 220, 255, 0.72);
+    background:
+      linear-gradient(rgba(6, 14, 24, 0.42), rgba(6, 14, 24, 0.42)),
+      linear-gradient(155deg, rgba(108, 200, 255, 0.24), rgba(255, 255, 255, 0.05) 58%, rgba(108, 200, 255, 0.1));
     color: #fff;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      0 0 0 1px rgba(108, 200, 255, 0.22),
+      0 20px 50px -26px rgba(108, 200, 255, 0.65),
+      0 0 26px -10px rgba(108, 200, 255, 0.5);
   }
-  .dtx-card:hover .dtx-card__arrow { transform: translateX(-3px); color: #fff; }
+  .dtx-card:hover::after { opacity: 1; transform: translateX(-420%) rotate(8deg); }
+  .dtx-card:hover .dtx-card__arrow { transform: translateX(-4px); color: #fff; }
 }
+.dtx-card:focus-visible {
+  outline: 2px solid rgba(159, 220, 255, 0.9);
+  outline-offset: 3px;
+  border-color: rgba(159, 220, 255, 0.72);
+}
+.dtx-card:active { transform: scale(0.988); }
 /* מצב פעיל אלגנטי */
 .dtx-card.is-selected {
-  border-color: rgba(159, 220, 255, 0.85);
-  background: rgba(108, 200, 255, 0.12);
+  border-color: rgba(159, 220, 255, 0.9);
+  background:
+    linear-gradient(rgba(6, 14, 24, 0.34), rgba(6, 14, 24, 0.34)),
+    linear-gradient(155deg, rgba(108, 200, 255, 0.3), rgba(255, 255, 255, 0.06) 58%, rgba(108, 200, 255, 0.14));
   color: #fff;
-  box-shadow: 0 0 0 1px rgba(159, 220, 255, 0.3), 0 12px 40px -18px rgba(108, 200, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    0 0 0 1px rgba(159, 220, 255, 0.3),
+    0 16px 46px -18px rgba(108, 200, 255, 0.55);
 }
-.dtx-card.is-dimmed { border-color: rgba(255, 255, 255, 0.05); }
+.dtx-card.is-dimmed { border-color: rgba(255, 255, 255, 0.07); opacity: 0.55; }
+@media (prefers-reduced-motion: reduce) {
+  .dtx-card, .dtx-card::after { transition: border-color 0.3s, background 0.3s, color 0.3s; }
+  .dtx-card:hover { transform: none; }
+}
+html.a11y-no-motion .dtx-card:hover { transform: none; }
 
 /* ---------- שאלת הקישור ---------- */
 .dtx-linkrow { display: grid; gap: 0.9rem; max-width: 30rem; margin-inline: auto; }
@@ -390,17 +478,121 @@ html.a11y-no-motion .dtx-h1__echo { animation: none; }
   border: 1px solid rgba(108, 200, 255, 0.18);
   border-inline-start: 2px solid rgba(159, 220, 255, 0.85);
 }
-.dtx-insight__label {
-  display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
-  color: rgba(159, 220, 255, 0.9); margin-block-end: 0.4rem;
-}
 .dtx-insight__text { margin: 0; color: rgba(234, 246, 253, 0.95); font-size: 0.99rem; line-height: 1.55; }
-.dtx-insight__goal { margin: 0.55rem 0 0; color: rgba(159, 220, 255, 0.95); font-weight: 600; font-size: 0.94rem; }
-.dtx-insight__urgency { margin: 0.35rem 0 0; color: rgba(223, 240, 251, 0.6); font-size: 0.9rem; }
-.dtx-form__sub { margin: 0 auto 1.4rem; max-width: 27rem; color: rgba(223, 240, 251, 0.72); font-size: 0.96rem; }
+.dtx-insight__urgency { margin: 0.35rem 0 0; color: rgba(223, 240, 251, 0.78); font-size: 0.9rem; }
+.dtx-form__sub { margin: 0 auto 1.4rem; max-width: 27rem; color: rgba(226, 241, 251, 0.86); font-size: 0.96rem; }
 .dtx-form__grid { display: grid; gap: 1rem; text-align: start; }
 .dtx-form__submit { width: 100%; padding: 16px; margin-top: 0.25rem; font-size: 1rem; }
-.dtx-form__reassure { margin: 1rem 0 0; font-size: 0.83rem; color: rgba(223, 240, 251, 0.5); }
+.dtx-form__reassure { margin: 1rem 0 0; font-size: 0.83rem; color: rgba(223, 240, 251, 0.7); }
+
+/* ============================================================================
+   הוכחה חברתית — שתי עדויות בזכוכית מטושטשת.
+   ברירת המחדל היא פריסת המובייל (ערימה מתחת לכפתורים); בדסקטופ רחב
+   הן עוברות לפינות התחתונות משני צדי הקומפוזיציה.
+   ============================================================================ */
+.dtx-proof {
+  width: 100%;
+  max-width: 44rem;
+  margin-block-start: clamp(1.2rem, 3vh, 1.9rem);
+  padding-inline: 1.25rem;
+}
+.dtx-proof__inner {
+  display: grid;
+  gap: 0.65rem;
+}
+/* כרטיס בהיר על רקע כהה. בכוונה *לא* לבן מלא כמו כפתור הוואטסאפ:
+   0.86 אטימות מוריד את המשטח לאפור-בהיר ומשאיר את הכפתור האלמנט
+   הבהיר החזק ביותר בהירו. הטקסט נשאר כהה מאוד, כך שהקריאוּת לא
+   נפגעת (יחס ניגודיות > 12:1 גם על הרקע הכהה שמתחת). */
+.dtx-quote {
+  margin: 0;
+  padding: 0.9rem 1.05rem;
+  border-radius: 14px;
+  text-align: start;
+  background: rgba(247, 250, 253, 0.86);
+  border: 1px solid rgba(14, 32, 51, 0.07);
+  box-shadow: 0 20px 46px -32px rgba(2, 6, 12, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.dtx-quote__text {
+  margin: 0;
+  font-size: 0.87rem;
+  line-height: 1.62;
+  color: #1c2836;
+}
+/* הגרשיים ויזואליים בלבד — הם לא חלק מהציטוט לקוראי מסך */
+.dtx-quote__text::before { content: "”"; }
+.dtx-quote__text::after { content: "”"; }
+.dtx-quote__by {
+  margin-block-start: 0.55rem;
+  display: flex;
+  align-items: center;
+  /* בכרטיס הצר של הדסקטופ העמודה מתפצלת לשתי שורות במקום לשבור את השם */
+  flex-wrap: wrap;
+  gap: 0 0.45rem;
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+.dtx-quote__name { font-weight: 600; color: #0f1c28; white-space: nowrap; }
+.dtx-quote__role { color: rgba(23, 35, 47, 0.62); }
+.dtx-quote__role::before { content: "· "; color: rgba(23, 35, 47, 0.35); }
+
+/* 1260px היא הרצפה שבה יש מקום אמיתי בצדדים: רוחב השאלון נעול על 44rem,
+   ומתחת לזה הכרטיסיות היו נכנסות לתוכו. */
+@media (min-width: 1260px) {
+  .dtx-proof {
+    position: absolute;
+    inset-inline: clamp(1rem, 2.4vw, 2.75rem);
+    /* ממורכז לגובה ההירו, משני צדי הקומפוזיציה */
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding-inline: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    pointer-events: none;
+  }
+  /* בדסקטופ אין פתיחה/סגירה — העוטף נעלם והכרטיסים הם ילדי ה-flex */
+  .dtx-proof__inner { display: contents; }
+  .dtx-quote {
+    /* 17.5vw שומר מרווח נשימה מול השאלון גם ב-1260px בדיוק */
+    width: min(17rem, 17.5vw);
+    padding: 1rem 1.15rem;
+  }
+  /* הזזה אנכית מדורגת — הכרטיסים לא יושבים על אותו קו.
+     דרך margin ולא transform: ל-.dtx-rise יש אנימציה על transform
+     עם fill both, והיא הייתה דורסת כל transform סטטי כאן. */
+  .dtx-quote:first-child { margin-block-end: 5rem; }
+  .dtx-quote:last-child { margin-block-start: 5rem; }
+}
+
+/* בפריסת הערימה העדויות פתוחות תמיד — בלי פתיחה בגלילה — אבל *מתחת
+   לקיפול*: המסך הראשון שייך לכותרת, ל-CTA ולשאלה, והעדויות מתגלות רק
+   כשגוללים. הכלל שמבטיח את זה הוא ה-min-height על .dtx-content למטה:
+   בלעדיו, בשלבי השאלות (תוכן קצר) הן היו עולות אל תוך המסך הראשון. */
+
+/* אחרי התשובה הראשונה התוכן מתקצר בכ-200px. בשלב הטופס (שבו אין
+   עדויות) ההירו נמדד לפי התוכן ונצמד למודול הבא, כדי לא להשאיר שטח
+   ריק. בשאר השלבים בלוק התוכן ממלא מסך מלא בדיוק — כך העדויות
+   מתחילות תמיד בדיוק בקצה התחתון ולא נראות עד לגלילה. */
+@media (max-width: 1259px) {
+  .dtx[data-phase="form"],
+  .dtx[data-phase="form"] .dtx-overlay { min-height: 0; }
+
+  /* התוכן נצמד לראש המסך ולא ממורכז בתוכו: מרכוז היה מוסיף עוד עשרות
+     פיקסלים ריקים בין ההאדר לכותרת, והכותרת וה-CTA צריכים להיות
+     גבוה ככל האפשר. השארית נופלת מתחת לקלפים — שם היא ממילא
+     המרווח שלפני העדויות. */
+  .dtx-overlay { justify-content: flex-start; }
+  .dtx:not([data-phase="form"]) .dtx-content {
+    min-height: calc(100svh - var(--dtx-pad-top));
+  }
+}
 
 /* ---------- רמז גלילה ---------- */
 .dtx-scroll {
@@ -409,7 +601,7 @@ html.a11y-no-motion .dtx-h1__echo { animation: none; }
   bottom: 1.1rem;
   transform: translateX(-50%);
   display: inline-flex; flex-direction: column; align-items: center; gap: 0.5rem;
-  color: rgba(223, 240, 251, 0.4); font-size: 0.76rem; font-weight: 500; letter-spacing: 0.08em;
+  color: rgba(223, 240, 251, 0.58); font-size: 0.76rem; font-weight: 500; letter-spacing: 0.08em;
   pointer-events: auto;
 }
 .dtx-scroll__mouse {
@@ -421,8 +613,52 @@ html.a11y-no-motion .dtx-h1__echo { animation: none; }
   animation: hint-bounce 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
+/* בפריסת הערימה הרמז יורד מהפינה אל תוך הזרימה — אחרת הוא נוחת על
+   כרטיסיות העדויות. שורת המיקרו-קופי עולה מעליהן, צמוד לכפתורים,
+   שם היא בכלל עובדת טוב יותר. גרפיקת העכבר מיותרת במגע. */
+@media (max-width: 1259px) {
+  .dtx-scroll {
+    position: static;
+    transform: none;
+    order: 1;
+    margin-block-start: clamp(0.9rem, 2.2vh, 1.4rem);
+  }
+  .dtx-scroll__mouse { display: none; }
+  .dtx-proof { order: 2; }
+}
+
+/* ---------- מובייל: מסלול ההמרה קודם לכל ---------- */
+@media (max-width: 560px) {
+  /* כפתור רחב ונוח ללחיצה, בלי להיצמד לקצוות המסך */
+  .dtx-cta__btn {
+    width: 100%;
+    max-width: 21rem;
+    padding: 17px 22px;
+    font-size: 1.04rem;
+  }
+  /* 21rem מיישר את השורה לרוחב הכפתור. 0.78rem ולא 0.8: ב-375px היא
+     יושבת בדיוק על הפיקסל האחרון, וכל נשימה פחות מזה מונעת שבירה
+     לשורה שנייה כמעט ריקה. */
+  .dtx-cta__reassure { max-width: 21rem; font-size: 0.78rem; }
+  .dtx-divider { width: 76%; }
+}
+
 @media (max-width: 520px) {
-  .dtx-overlay { padding-block: 5.5rem 4.5rem; }
+  /* הכותרת וה-CTA צריכים לעלות גבוה ככל האפשר, ולכן הריפוד התחתון
+     צומצם ל-2.5rem. את העליון אי אפשר לחתוך באותה מידה: ההאדר הוא
+     77px, ומתחת ל-5.75rem הכותרת נדבקת אליו. כך נשאר מרווח נשימה
+     של ~25px בלי לבזבז מסך. */
+  .dtx-overlay { --dtx-pad-top: 5.75rem; padding-block: var(--dtx-pad-top) 2.5rem; }
+  .dtx-quote { padding: 0.8rem 0.95rem; }
+  .dtx-quote__text { font-size: 0.84rem; }
+  /* המעבר לשאלון מתהדק במובייל — שלוש שורות טקסט לפני הקלפים היו
+     דוחפות אותם רחוק מדי מטה. ההפרדה נשמרת דרך הקו והמרווח שמעל. */
+  .dtx-secondary { margin-block-start: 1.15rem; }
+  .dtx-secondary__title { margin-block-start: 0.7rem; font-size: 0.98rem; }
+  .dtx-secondary__lead { margin-block-start: 0.2rem; font-size: 0.82rem; }
+  /* רמז הגלילה מיותר כאן: "ענו על 3 שאלות" כבר מסביר מה למטה,
+     והמיקרו-קופי מתחת ל-CTA כבר אומר "ללא התחייבות". */
+  .dtx-scroll { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

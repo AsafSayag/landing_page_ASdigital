@@ -156,7 +156,7 @@ export const CONTACT = {
   formPhoneLabel: "טלפון",
   formMsgLabel: "מה תרצו לקדם?",
   formMsgPlaceholder: "בניית אתר / קידום / קמפיין / אוטומציות...",
-  submit: "שליחה בוואטסאפ",
+  submit: "שליחת הפרטים",
   whatsappCta: "דברו איתי עכשיו בוואטסאפ",
   callCta: "חייגו אליי",
 };

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { BUSINESS, CONTACT, whatsappHref } from "@/lib/content";
+import { useEffect, useRef, useState } from "react";
+import { BUSINESS, CONTACT } from "@/lib/content";
 import { saveLead, updateLeadDraft } from "@/lib/save-lead";
-import { WhatsAppIcon, PhoneIcon } from "./icons";
+import { PhoneIcon } from "./icons";
+import SentModal from "./SentModal";
 import type { PainDetail } from "./PainPoints";
 import "./contact-form.css";
 
@@ -12,6 +13,7 @@ export default function ContactForm() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [pain, setPain] = useState<PainDetail | null>(null);
+  const [sentOpen, setSentOpen] = useState(false);
 
   /* מגיע מכרטיסי "אם אתה מרגיש..." */
   useEffect(() => {
@@ -41,10 +43,18 @@ export default function ContactForm() {
     return lines.join("\n");
   }
 
+  /* הפנייה נכתבת לגיליון בלבד — בלי מעבר לוואטסאפ. וכיוון שהמשתמש נשאר
+     מול טופס מלא, לחיצה נוספת הייתה מוסיפה שורה זהה; שולחים רק כששם או
+     טלפון באמת השתנו. */
+  const submittedKey = useRef<string | null>(null);
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    saveLead({ name, phone, message }, "טופס יצירת קשר");
-    window.open(whatsappHref(buildMessage()), "_blank", "noopener,noreferrer");
+    const key = `${name.trim()}|${phone.trim()}`;
+    if (submittedKey.current !== key) {
+      submittedKey.current = key;
+      saveLead({ name, phone, message }, "טופס יצירת קשר");
+    }
+    setSentOpen(true);
   }
 
   const mailHref = `mailto:${BUSINESS.email}?subject=${encodeURIComponent(
@@ -52,6 +62,7 @@ export default function ContactForm() {
   )}&body=${encodeURIComponent(buildMessage())}`;
 
   return (
+    <>
     <form id="contact-form" onSubmit={onSubmit} className="glass cf">
       {pain && (
         <div className="pain-note" role="status">
@@ -82,6 +93,8 @@ export default function ContactForm() {
           <label htmlFor="cf-phone" className="field-label">
             {CONTACT.formPhoneLabel}
           </label>
+          {/* חובה: בלי המעבר לוואטסאפ, שליחה בלי טלפון הייתה כותבת שורה
+              ריקה לגיליון ומציגה "אצור איתך קשר" שאי אפשר לקיים. */}
           <input
             id="cf-phone"
             className="field ltr"
@@ -92,6 +105,7 @@ export default function ContactForm() {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="050-0000000"
+            required
           />
         </div>
       </div>
@@ -111,7 +125,6 @@ export default function ContactForm() {
       </div>
 
       <button type="submit" className="glass-btn glass-btn--primary cf__submit">
-        <WhatsAppIcon className="glass-btn__icon" />
         {CONTACT.submit}
       </button>
 
@@ -129,5 +142,7 @@ export default function ContactForm() {
         הפרטים נשמרים לצורך יצירת קשר בלבד ולא מועברים לגורמי שיווק חיצוניים.
       </p>
     </form>
+    <SentModal open={sentOpen} onClose={() => setSentOpen(false)} />
+    </>
   );
 }
