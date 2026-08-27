@@ -156,18 +156,18 @@
 /* ---------- כותרת ראשית ---------- */
 .dtx-headline { max-width: min(60rem, 94vw); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
 .dtx-h1 { margin: 0; font-family: var(--font-display); line-height: 1.14; }
+/* הכותרת היא כעת שורה אחת קצרה ולא משפט בן שתי שורות, ולכן היא גדולה
+   יותר מבעבר: באותו שטח מסך היא נקראת חזק יותר. */
 .dtx-h1__l2 {
   display: block;
   font-weight: 700;
-  font-size: clamp(1.75rem, 4.1vw, 3rem);
+  font-size: clamp(2.05rem, 5vw, 3.5rem);
   letter-spacing: -0.028em;
   line-height: 1.14;
   color: #fff;
   text-shadow: 0 2px 30px rgba(0, 0, 0, 0.8);
   text-wrap: balance;
 }
-/* שתי שורות מפורשות בכל רוחב — שבירה בנקודה שנקבעה בתוכן, לא ברוחב */
-.dtx-h1__a, .dtx-h1__b { display: block; }
 
 /* ---------- תת-כותרת ---------- */
 .dtx-sub {
@@ -204,6 +204,9 @@
    ולא צבע חדש שלא קיים בפלטה.
    ============================================================================ */
 .dtx-cta {
+  /* רוחב מלא ולא shrink-to-fit: הטופס שנפתח כאן מגביל את עצמו ל-33rem,
+     ובלי רוחב מפורש להורה אחוזי הרוחב שלו נמדדים מול רוחב שתלוי בו עצמו. */
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -228,19 +231,104 @@
       0 0 62px rgba(159, 220, 255, 0.45);
   }
 }
-/* שורת ההרגעה — צמודה לכפתור (0.55rem) כדי שתיקרא כחלק ממנו ולא
-   כפסקה עצמאית. קטנה מתת-הכותרת, אבל 0.72 אטימות ולא פחות: זו שורה
-   שאמורה להיקרא, לא קרדיט. */
-.dtx-cta__reassure {
-  margin: 0.55rem 0 0;
-  max-width: 26rem;
-  font-size: 0.83rem;
+.dtx-cta__arrow {
+  flex: none;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (hover: hover) {
+  .dtx-cta__btn:hover .dtx-cta__arrow { transform: translateX(-4px); }
+}
+
+/* המוצא המשני — וואטסאפ כשורת טקסט ולא ככפתור.
+   0.72 אטימות על שורת ההקדמה ולבן כמעט מלא על הקישור: ההיררכיה
+   ברורה מול הכפתור שמעל, אבל הקישור עדיין נקרא כלחיץ. */
+.dtx-cta__wa {
+  margin: 0.85rem 0 0;
+  font-size: 0.88rem;
   line-height: 1.5;
   font-weight: 500;
   color: rgba(223, 240, 251, 0.72);
-  letter-spacing: 0.005em;
-  text-wrap: balance;
   text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+}
+.dtx-cta__walink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(159, 220, 255, 0.45);
+  transition: color 0.3s, text-decoration-color 0.3s;
+}
+.dtx-cta__walink svg { color: #6ee79a; flex: none; }
+.dtx-cta__walink:hover { text-decoration-color: rgba(159, 220, 255, 0.9); }
+.dtx-cta__walink:focus-visible {
+  outline: 2px solid rgba(159, 220, 255, 0.9);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============================================================================
+   הטופס הקצר — נפתח במקום הכפתור, באותו רוחב.
+   כרטיס זכוכית קל יותר מזה של טופס האבחון: הוא יושב בתוך המסך הראשון,
+   ומשטח כבד כאן היה בולע את הכותרת שמעליו.
+   ============================================================================ */
+.dtx-quick {
+  width: min(33rem, 100%);
+  display: grid;
+  gap: 0.85rem;
+  text-align: start;
+  margin-block-start: 0.35rem;
+  padding: clamp(1.1rem, 3vw, 1.5rem);
+  border-radius: 20px;
+  background: rgba(6, 12, 20, 0.66);
+  border: 1px solid rgba(159, 220, 255, 0.2);
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 30px 70px -46px rgba(0, 0, 0, 1);
+  animation: dtx-quick-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes dtx-quick-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dtx-quick { animation: none; }
+}
+html.a11y-no-motion .dtx-quick { animation: none; }
+
+/* שם וטלפון זה לצד זה — שתי שורות נפרדות היו מאריכות את הטופס לתוך
+   הקיפול. מתחת ל-520px הם חוזרים לערימה (בהמשך הקובץ). */
+.dtx-quick__row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+.dtx-quick .field-label { font-size: 0.86rem; margin-block-end: 0.35rem; }
+.dtx-quick .field { padding: 0.75rem 0.95rem; }
+
+/* חץ הבחירה מצויר ב-background: appearance:none מסיר את החץ המקורי,
+   ובלעדיו השדה נראה כמו שדה טקסט שלא נפתח. ב-RTL הוא יושב משמאל. */
+.dtx-quick__select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-inline-start: 2.4rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239fdcff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 0.95rem center;
+  background-size: 1.05rem;
+}
+/* ברירת המחדל של רשימת האפשרויות היא לבן-על-לבן בחלק מהדפדפנים */
+.dtx-quick__select option { background: #0b1520; color: #fff; }
+
+.dtx-quick__submit { width: 100%; padding: 15px; font-size: 1rem; margin-block-start: 0.15rem; }
+.dtx-quick__reassure {
+  margin: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba(223, 240, 251, 0.68);
+  text-wrap: balance;
 }
 
 /* ============================================================================
@@ -729,11 +817,13 @@ html.a11y-no-motion .dtx-card:hover { transform: none; }
     padding: 17px 22px;
     font-size: 1.04rem;
   }
-  /* 21rem מיישר את השורה לרוחב הכפתור. 0.78rem ולא 0.8: ב-375px היא
-     יושבת בדיוק על הפיקסל האחרון, וכל נשימה פחות מזה מונעת שבירה
-     לשורה שנייה כמעט ריקה. */
-  .dtx-cta__reassure { max-width: 21rem; font-size: 0.78rem; }
+  .dtx-cta__wa { font-size: 0.85rem; }
   .dtx-divider { width: 76%; }
+}
+
+/* מתחת ל-520px שם וטלפון זה לצד זה מייצרים שני שדות צרים מדי להקלדה */
+@media (max-width: 520px) {
+  .dtx-quick__row { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 520px) {

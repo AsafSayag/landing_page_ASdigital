@@ -13,6 +13,7 @@ import {
   ECHO_DEPTH,
   URGENCY_LINE,
   HERO_CTA,
+  QUICK_FORM,
   HERO_PROOF,
   DIAG_INTRO,
   DIAG_FORM,
@@ -86,8 +87,13 @@ export default function HeroExperience() {
   const [selected, setSelected] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Answers>({});
   const [siteUrl, setSiteUrl] = useState("");
+  /* שם וטלפון משותפים לשני המסלולים: זה אותו אדם, וכך מי שפתח את
+     הטופס הקצר ובכל זאת המשיך לשאלון לא מקליד את הפרטים פעמיים. */
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  /* המסלול הראשי — הטופס הקצר שנפתח במקום ה-CTA */
+  const [quickOpen, setQuickOpen] = useState(false);
+  const [kind, setKind] = useState("");
   /* הקלפים מונפשים עם עיכוב פתיחה רק בטעינה הראשונה */
   const [firstPaint, setFirstPaint] = useState(true);
   /* אישור השליחה — מחליף את המעבר לוואטסאפ */
@@ -138,12 +144,13 @@ export default function HeroExperience() {
   const summary = useMemo(
     () =>
       [
+        kind && `סוג האתר המבוקש: ${kind}`,
         answers.state && `מצב נוכחי: ${answers.state}`,
         answers.src && `מאיפה מגיעים לקוחות היום: ${answers.src}`,
         siteUrl && `קישור: ${siteUrl}`,
         answers.timing && `לוח זמנים: ${answers.timing}`,
       ].filter(Boolean) as string[],
-    [answers, siteUrl]
+    [answers, siteUrl, kind]
   );
 
   /* גם אם ינטוש את האבחון באמצע וילחץ על כפתור וואטסאפ אחר — התשובות
@@ -158,6 +165,27 @@ export default function HeroExperience() {
      לא קרתה. עכשיו הטופס נשאר מלא מולו — ולחיצה נוספת הייתה מוסיפה
      שורה זהה לגיליון. שולחים רק כששם או טלפון באמת השתנו. */
   const submittedKey = useRef<string | null>(null);
+
+  /* הטופס הקצר של המסלול הראשי. מקור נפרד בגיליון כדי שיהיה אפשר
+     להבחין בין מי שענה על השאלון לבין מי שפנה ישירות. */
+  const quickSubmittedKey = useRef<string | null>(null);
+  const onQuickSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const key = `${name.trim()}|${phone.trim()}|${kind}`;
+    if (quickSubmittedKey.current !== key) {
+      quickSubmittedKey.current = key;
+      saveLead({ name, phone, message: summary.join(" | ") }, "טופס הירו");
+    }
+    setSentOpen(true);
+  };
+
+  /* פתיחת הטופס מעבירה את המיקוד לשדה הראשון — אחרת לחיצה על הכפתור
+     משאירה את המשתמש מול טופס שנפתח בלי סמן, וקורא מסך לא שומע כלום. */
+  const quickFirstRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (quickOpen) quickFirstRef.current?.focus({ preventScroll: true });
+  }, [quickOpen]);
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const key = `${name.trim()}|${phone.trim()}`;
@@ -247,32 +275,108 @@ export default function HeroExperience() {
                   {echo}
                 </span>
               ) : (
-                <span className="dtx-h1__l2">
-                  <span className="dtx-h1__a">{INTRO.titleA}</span>{" "}
-                  <span className="dtx-h1__b">{INTRO.titleB}</span>
-                </span>
+                <span className="dtx-h1__l2">{INTRO.title}</span>
               )}
             </h1>
             {!echo && <p className="dtx-sub">{INTRO.sub}</p>}
           </div>
 
           {/* ---------- הפעולה הראשית ----------
+              הכפתור פותח את הטופס הקצר במקומו; שורת הוואטסאפ נשארת
+              מתחת בשני המצבים כמוצא למי שמעדיף לדבר.
               קישור wa.me רגיל בכוונה: LeadTracker מאזין בדלגציה על
               a[href*="wa.me"] ורושם את הפנייה. הוספת onClick משלנו כאן
               הייתה מייצרת אירוע כפול על אותה לחיצה. */}
           {phase === "state" && (
             <div className="dtx-cta dtx-rise" style={{ ["--d" as string]: "0.35s" }}>
-              <a
-                href={whatsappHref()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="glass-btn glass-btn--primary dtx-cta__btn"
-                aria-label={HERO_CTA.label}
-              >
-                <WhatsAppIcon className="glass-btn__icon" />
-                {HERO_CTA.label}
-              </a>
-              <p className="dtx-cta__reassure">{HERO_CTA.reassure}</p>
+              {quickOpen ? (
+                <form onSubmit={onQuickSubmit} className="dtx-quick">
+                  <div className="dtx-quick__row">
+                    <div>
+                      <label htmlFor="dtx-q-name" className="field-label">
+                        {QUICK_FORM.nameLabel}
+                      </label>
+                      <input
+                        id="dtx-q-name"
+                        ref={quickFirstRef}
+                        className="field"
+                        type="text"
+                        autoComplete="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder={QUICK_FORM.namePlaceholder}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="dtx-q-phone" className="field-label">
+                        {QUICK_FORM.phoneLabel}
+                      </label>
+                      <input
+                        id="dtx-q-phone"
+                        className="field ltr"
+                        type="tel"
+                        inputMode="tel"
+                        dir="ltr"
+                        autoComplete="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder={QUICK_FORM.phonePlaceholder}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="dtx-q-kind" className="field-label">
+                      {QUICK_FORM.kindLabel}
+                    </label>
+                    <select
+                      id="dtx-q-kind"
+                      className="field dtx-quick__select"
+                      value={kind}
+                      onChange={(e) => setKind(e.target.value)}
+                      required
+                    >
+                      {/* disabled — כדי שהשורה תשמש כ-placeholder ולא כתשובה
+                          לגיטימית שאפשר לשלוח */}
+                      <option value="" disabled>
+                        {QUICK_FORM.kindPlaceholder}
+                      </option>
+                      {QUICK_FORM.kinds.map((k) => (
+                        <option key={k} value={k}>
+                          {k}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <button type="submit" className="glass-btn glass-btn--primary dtx-quick__submit">
+                    {QUICK_FORM.submit}
+                  </button>
+                  <p className="dtx-quick__reassure">{QUICK_FORM.reassure}</p>
+                </form>
+              ) : (
+                <button
+                  type="button"
+                  className="glass-btn glass-btn--primary dtx-cta__btn"
+                  onClick={() => setQuickOpen(true)}
+                >
+                  {HERO_CTA.label}
+                  <ArrowIcon className="dtx-cta__arrow" width={20} height={20} />
+                </button>
+              )}
+
+              <p className="dtx-cta__wa">
+                {HERO_CTA.waPrefix}{" "}
+                <a
+                  href={whatsappHref()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="dtx-cta__walink"
+                >
+                  <WhatsAppIcon width={16} height={16} />
+                  {HERO_CTA.waLabel}
+                </a>
+              </p>
             </div>
           )}
 
