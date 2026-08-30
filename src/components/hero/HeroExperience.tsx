@@ -3,21 +3,10 @@
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  INTRO,
-  Q_STATE,
-  Q_LINK,
-  Q_SOURCE,
-  Q_TIMING,
-  INSIGHTS,
-  ECHO_LINE,
+  HERO_VARIANTS,
   ECHO_DEPTH,
-  URGENCY_LINE,
-  HERO_CTA,
-  QUICK_FORM,
-  HERO_PROOF,
-  DIAG_INTRO,
-  DIAG_FORM,
   SYSTEM_PROGRESS,
+  type HeroVariant,
 } from "@/lib/hero-diagnosis";
 import { whatsappHref } from "@/lib/content";
 import { saveLead, updateLeadDraft } from "@/lib/save-lead";
@@ -78,7 +67,11 @@ type Answers = {
   timing?: string; timingId?: string;    // לוח זמנים
 };
 
-export default function HeroExperience() {
+/* הגרסה מגיעה מהראוט ולא מהדפדפן: /marketing מרנדר את גרסת השיווק
+   כבר בשרת, ולכן אין הבזק של ההירו הרגיל לפני שה-JS נטען. */
+export default function HeroExperience({ variant = "site" }: { variant?: HeroVariant }) {
+  const c = HERO_VARIANTS[variant];
+
   const [mounted, setMounted] = useState(false);
   const webgl = useWebGL();
 
@@ -99,7 +92,7 @@ export default function HeroExperience() {
   /* אישור השליחה — מחליף את המעבר לוואטסאפ */
   const [sentOpen, setSentOpen] = useState(false);
   /* העדות המוצגת בפריסת הערימה (בדסקטופ שתיהן גלויות ממילא) */
-  const { idx: proofIdx, setIdx: setProofIdx } = useProofCarousel(HERO_PROOF.length);
+  const { idx: proofIdx, setIdx: setProofIdx } = useProofCarousel(c.proof.length);
 
   useEffect(() => setMounted(true), []);
 
@@ -130,27 +123,27 @@ export default function HeroExperience() {
   };
 
   /* התובנה נגזרת מנקודת הפתיחה */
-  const insight = answers.stateId ? INSIGHTS[answers.stateId] : "";
+  const insight = answers.stateId ? c.insights[answers.stateId] : "";
   /* הכותרת המכווצת מהדהדת תמיד את הבחירה *האחרונה* — כך היא מתחלפת
      בכל שאלה ולא נתקעת על התשובה הראשונה. */
   const lastId = answers.timingId ?? answers.srcId ?? answers.stateId;
-  const echo = lastId ? ECHO_LINE[lastId] : "";
+  const echo = lastId ? c.echo[lastId] : "";
   /* התג מתכהה עם כל תשובה — מזכוכית שקופה בהתחלה לרקע אטום בסוף */
   const echoDepth = ECHO_DEPTH[phase] ?? 0;
-  const urgency = answers.timingId ? URGENCY_LINE[answers.timingId] : "";
+  const urgency = answers.timingId ? c.urgency[answers.timingId] : "";
 
   /* סיכום האבחון — נכנס לעמודת ההודעה בגיליון, כדי שהליד יישמר עם
      ההקשר ולא רק עם שם וטלפון. */
   const summary = useMemo(
     () =>
       [
-        kind && `סוג האתר המבוקש: ${kind}`,
+        kind && `${c.kindSummaryLabel}: ${kind}`,
         answers.state && `מצב נוכחי: ${answers.state}`,
         answers.src && `מאיפה מגיעים לקוחות היום: ${answers.src}`,
         siteUrl && `קישור: ${siteUrl}`,
         answers.timing && `לוח זמנים: ${answers.timing}`,
       ].filter(Boolean) as string[],
-    [answers, siteUrl, kind]
+    [answers, siteUrl, kind, c.kindSummaryLabel]
   );
 
   /* גם אם ינטוש את האבחון באמצע וילחץ על כפתור וואטסאפ אחר — התשובות
@@ -174,7 +167,7 @@ export default function HeroExperience() {
     const key = `${name.trim()}|${phone.trim()}|${kind}`;
     if (quickSubmittedKey.current !== key) {
       quickSubmittedKey.current = key;
-      saveLead({ name, phone, message: summary.join(" | ") }, "טופס הירו");
+      saveLead({ name, phone, message: summary.join(" | ") }, c.leadSource.quick);
     }
     setSentOpen(true);
   };
@@ -191,7 +184,7 @@ export default function HeroExperience() {
     const key = `${name.trim()}|${phone.trim()}`;
     if (submittedKey.current !== key) {
       submittedKey.current = key;
-      saveLead({ name, phone, message: summary.join(" | ") }, "אבחון דיגיטלי");
+      saveLead({ name, phone, message: summary.join(" | ") }, c.leadSource.diag);
     }
     setSentOpen(true);
   };
@@ -275,10 +268,10 @@ export default function HeroExperience() {
                   {echo}
                 </span>
               ) : (
-                <span className="dtx-h1__l2">{INTRO.title}</span>
+                <span className="dtx-h1__l2">{c.intro.title}</span>
               )}
             </h1>
-            {!echo && <p className="dtx-sub">{INTRO.sub}</p>}
+            {!echo && <p className="dtx-sub">{c.intro.sub}</p>}
           </div>
 
           {/* ---------- הפעולה הראשית ----------
@@ -294,7 +287,7 @@ export default function HeroExperience() {
                   <div className="dtx-quick__row">
                     <div>
                       <label htmlFor="dtx-q-name" className="field-label">
-                        {QUICK_FORM.nameLabel}
+                        {c.quickForm.nameLabel}
                       </label>
                       <input
                         id="dtx-q-name"
@@ -304,13 +297,13 @@ export default function HeroExperience() {
                         autoComplete="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        placeholder={QUICK_FORM.namePlaceholder}
+                        placeholder={c.quickForm.namePlaceholder}
                         required
                       />
                     </div>
                     <div>
                       <label htmlFor="dtx-q-phone" className="field-label">
-                        {QUICK_FORM.phoneLabel}
+                        {c.quickForm.phoneLabel}
                       </label>
                       <input
                         id="dtx-q-phone"
@@ -321,14 +314,14 @@ export default function HeroExperience() {
                         autoComplete="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder={QUICK_FORM.phonePlaceholder}
+                        placeholder={c.quickForm.phonePlaceholder}
                         required
                       />
                     </div>
                   </div>
                   <div>
                     <label htmlFor="dtx-q-kind" className="field-label">
-                      {QUICK_FORM.kindLabel}
+                      {c.quickForm.kindLabel}
                     </label>
                     <select
                       id="dtx-q-kind"
@@ -340,9 +333,9 @@ export default function HeroExperience() {
                       {/* disabled — כדי שהשורה תשמש כ-placeholder ולא כתשובה
                           לגיטימית שאפשר לשלוח */}
                       <option value="" disabled>
-                        {QUICK_FORM.kindPlaceholder}
+                        {c.quickForm.kindPlaceholder}
                       </option>
-                      {QUICK_FORM.kinds.map((k) => (
+                      {c.quickForm.kinds.map((k) => (
                         <option key={k} value={k}>
                           {k}
                         </option>
@@ -350,9 +343,9 @@ export default function HeroExperience() {
                     </select>
                   </div>
                   <button type="submit" className="glass-btn glass-btn--primary dtx-quick__submit">
-                    {QUICK_FORM.submit}
+                    {c.quickForm.submit}
                   </button>
-                  <p className="dtx-quick__reassure">{QUICK_FORM.reassure}</p>
+                  <p className="dtx-quick__reassure">{c.quickForm.reassure}</p>
                 </form>
               ) : (
                 <button
@@ -360,13 +353,13 @@ export default function HeroExperience() {
                   className="glass-btn glass-btn--primary dtx-cta__btn"
                   onClick={() => setQuickOpen(true)}
                 >
-                  {HERO_CTA.label}
+                  {c.cta.label}
                   <ArrowIcon className="dtx-cta__arrow" width={20} height={20} />
                 </button>
               )}
 
               <p className="dtx-cta__wa">
-                {HERO_CTA.waPrefix}{" "}
+                {c.cta.waPrefix}{" "}
                 <a
                   href={whatsappHref()}
                   target="_blank"
@@ -374,7 +367,7 @@ export default function HeroExperience() {
                   className="dtx-cta__walink"
                 >
                   <WhatsAppIcon width={16} height={16} />
-                  {HERO_CTA.waLabel}
+                  {c.cta.waLabel}
                 </a>
               </p>
             </div>
@@ -386,8 +379,8 @@ export default function HeroExperience() {
           {phase === "state" && (
             <div className="dtx-secondary dtx-rise" style={{ ["--d" as string]: "0.5s" }}>
               <div className="dtx-divider" aria-hidden="true" />
-              <p className="dtx-secondary__title">{DIAG_INTRO.title}</p>
-              <p className="dtx-secondary__lead">{DIAG_INTRO.lead}</p>
+              <p className="dtx-secondary__title">{c.diagIntro.title}</p>
+              <p className="dtx-secondary__lead">{c.diagIntro.lead}</p>
             </div>
           )}
 
@@ -395,21 +388,17 @@ export default function HeroExperience() {
           <div className="dtx-step">
             <div key={phase} className="dtx-step__inner">
               {phase === "state" && (
-                <StepBlock q={Q_STATE} locked={locked} base={cardsBase}>
-                  {Q_STATE.options.map((o, i) => (
+                <StepBlock q={c.qState} locked={locked} base={cardsBase}>
+                  {c.qState.options.map((o, i) => (
                     <DiagCard
                       key={o.id}
                       i={i}
                       base={cardsBase}
                       selected={selected === o.id}
                       dimmed={!!selected && selected !== o.id}
-                      onClick={() =>
-                        advance(
-                          o.id === "site-weak" ? "link" : o.id === "no-site" ? "source" : "timing",
-                          { state: o.label, stateId: o.id },
-                          o.id
-                        )
-                      }
+                      /* לאן ממשיכים יושב על האפשרות עצמה — כל גרסה
+                         מגדירה את ההסתעפות שלה בקובץ התוכן. */
+                      onClick={() => advance(o.next, { state: o.label, stateId: o.id }, o.id)}
                     >
                       {o.label}
                     </DiagCard>
@@ -421,7 +410,7 @@ export default function HeroExperience() {
                 /* השאלה מוצגת בתג הזכוכית שמעל, ולכן כאן רק האפשרויות */
                 <div className={`dtx-stepblock ${locked ? "is-locked" : ""}`}>
                   <div className="dtx-cards">
-                    {Q_SOURCE.options.map((o, i) => (
+                    {c.qSource.options.map((o, i) => (
                       <DiagCard
                         key={o.id}
                         i={i}
@@ -439,7 +428,7 @@ export default function HeroExperience() {
 
               {phase === "link" && (
                 <div className="dtx-stepblock">
-                  <StepHead title={Q_LINK.title} lead={Q_LINK.lead} />
+                  <StepHead title={c.qLink.title} lead={c.qLink.lead} />
                   <form
                     className="dtx-linkrow"
                     onSubmit={(e) => {
@@ -456,12 +445,12 @@ export default function HeroExperience() {
                       inputMode="url"
                       value={siteUrl}
                       onChange={(e) => setSiteUrl(e.target.value)}
-                      placeholder={Q_LINK.placeholder}
-                      aria-label={Q_LINK.title}
+                      placeholder={c.qLink.placeholder}
+                      aria-label={c.qLink.title}
                     />
                     <div className="dtx-linkbtns">
                       <button type="submit" className="glass-btn glass-btn--primary">
-                        {Q_LINK.submit}
+                        {c.qLink.submit}
                         <ArrowIcon width={18} height={18} />
                       </button>
                       <button
@@ -474,7 +463,7 @@ export default function HeroExperience() {
                           scrollToTop();
                         }}
                       >
-                        {Q_LINK.skip}
+                        {c.qLink.skip}
                       </button>
                     </div>
                   </form>
@@ -482,8 +471,8 @@ export default function HeroExperience() {
               )}
 
               {phase === "timing" && (
-                <StepBlock q={Q_TIMING} locked={locked} base={cardsBase}>
-                  {Q_TIMING.options.map((o, i) => (
+                <StepBlock q={c.qTiming} locked={locked} base={cardsBase}>
+                  {c.qTiming.options.map((o, i) => (
                     <DiagCard
                       key={o.id}
                       i={i}
@@ -501,8 +490,8 @@ export default function HeroExperience() {
               {phase === "form" && (
                 <div className="dtx-form-wrap dtx-rise" style={{ ["--d" as string]: "0.5s" }}>
                   <div className="dtx-form">
-                    <p className="eyebrow">{DIAG_FORM.eyebrow}</p>
-                    <h2 className="dtx-form__title">{DIAG_FORM.title}</h2>
+                    <p className="eyebrow">{c.form.eyebrow}</p>
+                    <h2 className="dtx-form__title">{c.form.title}</h2>
 
                     {insight && (
                       <div className="dtx-insight">
@@ -511,12 +500,12 @@ export default function HeroExperience() {
                       </div>
                     )}
 
-                    <p className="dtx-form__sub">{DIAG_FORM.sub}</p>
+                    <p className="dtx-form__sub">{c.form.sub}</p>
 
                     <form onSubmit={onSubmit} className="dtx-form__grid">
                       <div>
                         <label htmlFor="dtx-name" className="field-label">
-                          {DIAG_FORM.nameLabel}
+                          {c.form.nameLabel}
                         </label>
                         <input
                           id="dtx-name"
@@ -525,13 +514,13 @@ export default function HeroExperience() {
                           autoComplete="name"
                           value={name}
                           onChange={(e) => setName(e.target.value)}
-                          placeholder={DIAG_FORM.namePlaceholder}
+                          placeholder={c.form.namePlaceholder}
                           required
                         />
                       </div>
                       <div>
                         <label htmlFor="dtx-phone" className="field-label">
-                          {DIAG_FORM.phoneLabel}
+                          {c.form.phoneLabel}
                         </label>
                         <input
                           id="dtx-phone"
@@ -542,15 +531,15 @@ export default function HeroExperience() {
                           autoComplete="tel"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          placeholder={DIAG_FORM.phonePlaceholder}
+                          placeholder={c.form.phonePlaceholder}
                           required
                         />
                       </div>
                       <button type="submit" className="glass-btn glass-btn--primary dtx-form__submit">
-                        {DIAG_FORM.submit}
+                        {c.form.submit}
                       </button>
                     </form>
-                    <p className="dtx-form__reassure">{DIAG_FORM.reassure}</p>
+                    <p className="dtx-form__reassure">{c.form.reassure}</p>
                   </div>
                 </div>
               )}
@@ -567,7 +556,7 @@ export default function HeroExperience() {
                 הוא display:contents והכרטיסים חוזרים להיות ילדים ישירים
                 של ה-flex. */}
             <div className="dtx-proof__inner">
-              {HERO_PROOF.map((t, i) => (
+              {c.proof.map((t, i) => (
                 <figure
                   key={t.name}
                   className={`dtx-quote dtx-rise${i === proofIdx ? " is-current" : ""}`}
@@ -584,14 +573,14 @@ export default function HeroExperience() {
             {/* נקודות הניווט — רק בפריסת הערימה, שם מוצגת עדות אחת בכל רגע.
                 בלעדיהן ההחלפה נראית כמו תוכן שמתחלף מעצמו בלי סיבה.
                 הכרטיס הלא-פעיל מוסתר ב-visibility ולכן ממילא לא בעץ הנגישות. */}
-            {HERO_PROOF.length > 1 && (
+            {c.proof.length > 1 && (
               <div className="dtx-proof__dots">
-                {HERO_PROOF.map((t, i) => (
+                {c.proof.map((t, i) => (
                   <button
                     key={t.name}
                     type="button"
                     className={`dtx-proof__dot${i === proofIdx ? " is-current" : ""}`}
-                    aria-label={`עדות ${i + 1} מתוך ${HERO_PROOF.length}`}
+                    aria-label={`עדות ${i + 1} מתוך ${c.proof.length}`}
                     aria-current={i === proofIdx}
                     onClick={() => setProofIdx(i)}
                   />
@@ -602,7 +591,7 @@ export default function HeroExperience() {
         )}
 
         <a href="#services" className="dtx-scroll" aria-label="המשיכו לתוכן">
-          <span>{INTRO.hint}</span>
+          <span>{c.intro.hint}</span>
           <span className="dtx-scroll__mouse">
             <span />
           </span>
@@ -631,10 +620,10 @@ function StepBlock({
   base,
   children,
 }: {
-  /* options נדרש כאן רק כדי ש-Q_STATE (שאין לו יותר title) לא ייפול על
+  /* options נדרש כאן רק כדי ששאלת הפתיחה (שאין לה title) לא תיפול על
      בדיקת ה-weak type של TS — טיפוס שכל שדותיו אופציונליים דוחה אובייקט
-     בלי אף שדה משותף. */
-  q: { title?: string; lead?: string; options: { id: string; label: string }[] };
+     בלי אף שדה משותף. readonly כי המערכים בקובץ התוכן הם as const. */
+  q: { title?: string; lead?: string; options: readonly { id: string; label: string }[] };
   locked?: boolean;
   base: number;
   children: React.ReactNode;
