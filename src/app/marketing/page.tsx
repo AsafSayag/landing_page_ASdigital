@@ -9,7 +9,7 @@ import SitePage from "@/components/SitePage";
 export const metadata: Metadata = {
   title: "שיווק לעסק — קידום ממומן, אורגני ו-AI | AS digital",
   description:
-    "קידום ממומן בגוגל ובמטא, קידום אורגני, ניהול ותחזוקת אתרים ואוטומציות AI. אסף סאייג, מולך ישירות.",
+    "קידום ממומן בגוגל ובמטא, קידום אורגני, תחזוקת אתר ואוטומציות. אסף סאייג מנהל את הקמפיינים בעצמו, ואתם מדברים איתו ישירות.",
   alternates: { canonical: "/marketing" },
   robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
 };

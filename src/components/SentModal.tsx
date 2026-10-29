@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { SENT_MODAL } from "@/lib/hero-diagnosis";
+import { SENT_MODAL } from "@/lib/content";
 import "./sent-modal.css";
 
 /* אישור שליחה משותף לטופס ההירו ולטופס יצירת הקשר.

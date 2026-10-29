@@ -31,10 +31,13 @@ export default function LegalDoc({ doc }: { doc: LegalDocument }) {
         <div className="container-x legal-header__inner">
           <Link href="/" aria-label={`${BUSINESS.name} — לעמוד הבית`}>
             <Image
-              src="/images/as-logo.png"
+              src="/images/as-logo-light.png"
               alt={BUSINESS.name}
               width={2576}
               height={570}
+              /* בלי sizes, next/image מזמין את הווריאנט של 3840px עבור לוגו
+                 שמוצג ב-160px. */
+              sizes="160px"
               style={{ height: "2.2rem", width: "auto" }}
               priority
             />
@@ -47,7 +50,7 @@ export default function LegalDoc({ doc }: { doc: LegalDocument }) {
 
       <main id="main" className="legal-main">
         <article className="container-x legal-doc">
-          <h1 className="h2 heading-accent">{doc.title}</h1>
+          <h1 className="h2">{doc.title}</h1>
           <p className="caption legal-updated">עודכן לאחרונה: {LEGAL_UPDATED}</p>
 
           <div className="legal-intro">
@@ -71,15 +74,15 @@ export default function LegalDoc({ doc }: { doc: LegalDocument }) {
         </article>
       </main>
 
-      <footer className="surface-950 legal-footer">
+      <footer className="legal-footer">
         <div className="container-x legal-footer__inner">
           <a
             href={whatsappHref()}
             target="_blank"
             rel="noopener noreferrer"
-            className="glass-btn wa-btn"
+            className="btn btn--primary"
           >
-            <WhatsAppIcon className="glass-btn__icon" />
+            <WhatsAppIcon className="btn__icon" />
             דברו איתי בוואטסאפ
           </a>
           <p className="caption">{FOOTER.rights}</p>

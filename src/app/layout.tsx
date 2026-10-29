@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Frank_Ruhl_Libre, IBM_Plex_Sans_Hebrew } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import { BUSINESS } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
 import { GOOGLE_ADS_ID, GOOGLE_ANALYTICS_ID } from "@/lib/ads-conversion";
@@ -8,26 +8,19 @@ import AccessibilityWidget, { A11Y_BOOT_SCRIPT } from "@/components/Accessibilit
 import LeadTracker from "@/components/LeadTracker";
 import "./globals.css";
 
-/* כותרות: Frank Ruhl Libre — סריף עברי אלגנטי שמשדר אמינות ויוקרה.
-   גוף: IBM Plex Sans Hebrew — סאנס עברי מקצועי ומדויק. */
-const display = Frank_Ruhl_Libre({
+/* משפחה אחת לכל האתר: Open Sans. זה פונט משתנה, ולכן כל המשקלים (300 עד 800)
+   מגיעים מקובץ אחד — כותרות וגוף חולקים אותו, והדפדפן טוען פחות.
+   שני המשתנים נשארים כדי שה-CSS לא יצטרך להשתנות בכל מקום. */
+const openSans = Open_Sans({
   subsets: ["hebrew", "latin"],
-  variable: "--font-display",
-  display: "swap",
-  preload: true,
-});
-
-const body = IBM_Plex_Sans_Hebrew({
-  subsets: ["hebrew", "latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-body",
+  variable: "--font-sans",
   display: "swap",
   preload: true,
 });
 
 const TITLE = "AS digital — בניית אתרים, קידום אורגני ושיווק ממומן | אסף סאייג";
 const DESCRIPTION =
-  "אסף סאייג, מומחה דיגיטל ו-AI עם 6+ שנות ניסיון. בניית אתרים מהירים, קידום אורגני בגוגל ובבינה מלאכותית, שיווק ממומן ואוטומציות שמייצרות לקוחות.";
+  "אסף סאייג בונה אתרים ודפי נחיתה לעסקים, מקדם אותם בגוגל ובבינה המלאכותית ומנהל קמפיינים ממומנים. שש שנים בדיגיטל, ואתם מדברים איתו ישירות.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -58,13 +51,13 @@ export const metadata: Metadata = {
     locale: "he_IL",
     url: SITE_URL,
     siteName: BUSINESS.name,
-    title: "AS digital — נוכחות דיגיטלית שמייצרת לקוחות",
+    title: "AS digital — אתרים שמביאים פניות",
     description: DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: "AS digital — נוכחות דיגיטלית שמייצרת לקוחות",
-    description: "בניית אתרים, קידום אורגני, שיווק ממומן ו-AI. אסף סאייג.",
+    title: "AS digital — אתרים שמביאים פניות",
+    description: "בניית אתרים, קידום בגוגל, שיווק ממומן ואוטומציות. אסף סאייג.",
   },
   robots: {
     index: true,
@@ -81,7 +74,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050505",
+  themeColor: "#f8f5f2",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -98,7 +91,7 @@ const jsonLd = {
       url: SITE_URL,
       telephone: "+972-54-766-4809",
       email: BUSINESS.email,
-      image: `${SITE_URL}/video/process-poster.jpg`,
+      image: `${SITE_URL}/images/asaf-portrait.webp`,
       /* גוגל משתמש ב-logo לכרטיס הידע ולתוצאות המותג */
       logo: `${SITE_URL}/images/as-logo.png`,
       priceRange: "$$",
@@ -165,7 +158,7 @@ export default function RootLayout({
     <html
       lang="he"
       dir="rtl"
-      className={`${display.variable} ${body.variable}`}
+      className={openSans.variable}
       suppressHydrationWarning
     >
       <head>
