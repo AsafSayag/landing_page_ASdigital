@@ -17,22 +17,22 @@ export default function OgImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#050505",
+          backgroundColor: "#f8f5f2",
           backgroundImage:
-            "linear-gradient(135deg, #2a0713 0%, #050505 45%, #08202f 100%)",
-          color: "#ffffff",
+            "linear-gradient(135deg, #f6eaee 0%, #f8f5f2 48%, #efe8e2 100%)",
+          color: "#16100f",
           fontFamily: "sans-serif",
         }}
       >
         <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
           <span style={{ fontSize: 86, fontWeight: 800, letterSpacing: -3 }}>AS</span>
-          <span style={{ fontSize: 86, fontWeight: 400, color: "#b9c6d2", letterSpacing: -3 }}>
+          <span style={{ fontSize: 86, fontWeight: 400, color: "#6a5a5f", letterSpacing: -3 }}>
             digital
           </span>
-          <span style={{ fontSize: 86, fontWeight: 800, color: "#d8577f" }}>.</span>
+          <span style={{ fontSize: 86, fontWeight: 800, color: "#a51d46" }}>.</span>
         </div>
 
-        <div style={{ marginTop: 26, fontSize: 34, color: "#dfe9f2", letterSpacing: -0.5 }}>
+        <div style={{ marginTop: 26, fontSize: 34, color: "#3a2e31", letterSpacing: -0.5 }}>
           Websites · SEO · Google &amp; Meta Ads · AI Automation
         </div>
 
@@ -43,11 +43,11 @@ export default function OgImage() {
             alignItems: "center",
             gap: 14,
             fontSize: 26,
-            color: "#9fb3c4",
+            color: "#6a5a5f",
           }}
         >
           <span>Asaf Sayag</span>
-          <span style={{ color: "#3e4a55" }}>|</span>
+          <span style={{ color: "#a1908f" }}>|</span>
           <span>054-766-4809</span>
         </div>
 
@@ -58,7 +58,7 @@ export default function OgImage() {
             left: 0,
             right: 0,
             height: 6,
-            background: "linear-gradient(90deg, #6cbdf5, #a51d46)",
+            background: "linear-gradient(90deg, #6b1029, #a51d46, #d78ba3)",
           }}
         />
       </div>

@@ -290,7 +290,7 @@ html.a11y-contrast :where(a) {
   -webkit-text-fill-color: #ffe14d !important;
   text-decoration: underline !important;
 }
-html.a11y-contrast :where(button, .glass-btn, .wa-btn, .wa-fab, .a11y-fab) {
+html.a11y-contrast :where(button, .btn, .wa-fab, .a11y-fab) {
   background: #000 !important;
   background-image: none !important;
   color: #fff !important;
@@ -305,13 +305,13 @@ html.a11y-contrast :where(input, textarea, select) {
 }
 html.a11y-contrast :where(input, textarea)::placeholder { color: #c9c9c9 !important; }
 /* טקסט עם גרדיאנט (background-clip: text) — מאלצים צבע מלא. */
-html.a11y-contrast :where(.stat-value, .heading-accent, .a11y-panel__title) {
+html.a11y-contrast :where(.about-stat__value, .a11y-panel__title) {
   background: none !important;
   color: #fff !important;
   -webkit-text-fill-color: #fff !important;
 }
 /* אלמנטים דקורטיביים שרק מוסיפים רעש במצב ניגודיות. */
-html.a11y-contrast :where(.ambient-glow, .about-portrait__glow, canvas, video) {
+html.a11y-contrast :where(.aurora, .grain, .grid-floor, .spotlight, canvas, video) {
   display: none !important;
 }
 html.a11y-contrast .a11y-panel { background: #000 !important; border: 2px solid #fff !important; }

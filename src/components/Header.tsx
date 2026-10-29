@@ -25,22 +25,21 @@ export default function Header() {
 
   return (
     <header className={`site-header ${scrolled ? "site-header--scrolled" : ""}`}>
-      <div className="container-x" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "4.75rem" }}>
+      <div className="container-x header-bar">
         <a href="#top" className="brand-logo" aria-label="AS digital — לדף הבית">
           <Image
-            src="/images/as-logo.png"
+            src="/images/as-logo-light.png"
             alt="AS Digital"
             width={2576}
             height={570}
             priority
             /* בלי sizes, next/image מזמין את הווריאנט של 3840px עבור לוגו
-               שמוצג ב-174px — וזה גם מה שנטען ב-preload כ-LCP. */
+               שמוצג ב-174px — וזה גם מה שנטען ב-preload. */
             sizes="174px"
-            style={{ height: "clamp(1.9rem, 3.4vw, 2.4rem)", width: "auto" }}
+            style={{ height: "clamp(1.8rem, 3.2vw, 2.2rem)", width: "auto" }}
           />
         </a>
 
-        {/* ניווט דסקטופ */}
         <nav aria-label="ניווט ראשי" className="header-nav">
           {NAV.map((item) => (
             <a key={item.href} href={item.href} className="nav-link">
@@ -49,25 +48,23 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* פעולות ימין */}
         <div className="header-actions">
           <a
             href={`tel:${BUSINESS.phoneDial}`}
             className="header-phone"
             aria-label={`חייגו ${BUSINESS.phoneDisplay}`}
           >
-            <PhoneIcon width={18} height={18} />
+            <PhoneIcon width={17} height={17} />
             <span className="ltr">{BUSINESS.phoneDisplay}</span>
           </a>
 
-          {/* כפתור וואטסאפ #1 — בהאדר */}
           <a
             href={whatsappHref()}
             target="_blank"
             rel="noopener noreferrer"
-            className="glass-btn wa-btn header-wa"
+            className="btn header-wa"
           >
-            <WhatsAppIcon className="glass-btn__icon" />
+            <WhatsAppIcon className="btn__icon" />
             <span>וואטסאפ</span>
           </a>
 
@@ -83,12 +80,11 @@ export default function Header() {
         </div>
       </div>
 
-      {/* תפריט מובייל */}
       {open && (
         <div className="mobile-drawer" onClick={() => setOpen(false)}>
           <nav
             aria-label="ניווט מובייל"
-            style={{ display: "flex", flexDirection: "column", gap: "0.5rem", padding: "6rem 2rem 2rem" }}
+            className="mobile-nav"
             onClick={(e) => e.stopPropagation()}
           >
             {NAV.map((item, i) => (
@@ -102,19 +98,18 @@ export default function Header() {
                 {item.label}
               </a>
             ))}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.85rem", marginTop: "1.5rem" }}>
+            <div className="mobile-actions">
               <a
                 href={whatsappHref()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass-btn wa-btn"
-                style={{ width: "100%" }}
+                className="btn btn--primary"
                 onClick={() => setOpen(false)}
               >
-                <WhatsAppIcon className="glass-btn__icon" />
+                <WhatsAppIcon className="btn__icon" />
                 שלחו הודעה בוואטסאפ
               </a>
-              <a href={`tel:${BUSINESS.phoneDial}`} className="glass-btn" style={{ width: "100%" }}>
+              <a href={`tel:${BUSINESS.phoneDial}`} className="btn">
                 <PhoneIcon width={18} height={18} />
                 <span className="ltr">{BUSINESS.phoneDisplay}</span>
               </a>
@@ -124,14 +119,21 @@ export default function Header() {
       )}
 
       <style>{`
+        .header-bar { display: flex; align-items: center; justify-content: space-between; height: 4.75rem; }
         .brand-logo { display: inline-flex; align-items: center; }
-        .header-nav { display: none; gap: 2rem; }
+        .header-nav { display: none; gap: 2.25rem; }
         .header-actions { display: flex; align-items: center; gap: 0.85rem; }
-        .header-phone { display: none; align-items: center; gap: 0.45rem; font-weight: 600; color: var(--mist-200); transition: color .25s; }
-        .header-phone:hover { color: #fff; }
-        .header-wa { padding: 11px 20px; font-size: 0.95rem; }
-        .menu-toggle { display: inline-flex; background: transparent; border: 0; color: #fff; cursor: pointer; padding: 0.35rem; }
-        .mobile-link { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: #fff; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .header-phone { display: none; align-items: center; gap: 0.45rem; font-weight: 500; font-size: 0.95rem; color: var(--ink-500); transition: color .25s; }
+        .header-phone:hover { color: var(--ink-900); }
+        .header-wa { padding: 10px 20px; font-size: 0.92rem; }
+        .menu-toggle { display: inline-flex; background: transparent; border: 0; color: var(--ink-900); cursor: pointer; padding: 0.35rem; }
+        .mobile-nav { display: flex; flex-direction: column; gap: 0.25rem; padding: 6rem 2rem 2rem; }
+        .mobile-link {
+          font-family: var(--font-display); font-weight: 500; font-size: 1.75rem;
+          color: var(--ink-900); padding: 0.6rem 0;
+          border-bottom: 1px solid rgba(22,16,15,0.08);
+        }
+        .mobile-actions { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 2rem; }
         @media (min-width: 900px) {
           .header-nav { display: flex; }
           .header-phone { display: inline-flex; }
@@ -139,7 +141,7 @@ export default function Header() {
         }
         @media (max-width: 480px) {
           .header-wa span { display: none; }
-          .header-wa { padding: 11px; }
+          .header-wa { padding: 10px; }
         }
       `}</style>
     </header>
