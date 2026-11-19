@@ -11,7 +11,7 @@ export const BUSINESS = {
   phoneDisplay: "054-766-4809",
   phoneDial: "0547664809",
   phoneIntl: "972547664809",
-  email: "asaf00500@gmail.com",
+  email: "asaf@asdigital.online",
   address: "המתכת 8, קדימה צורן",
   yearsInDigital: "6+",
 } as const;
